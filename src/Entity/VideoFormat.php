@@ -49,24 +49,15 @@ use Drupal\responsive_video\VideoFormatListBuilder;
   config_export: [
     'id',
     'label',
-    'description',
+    'fileEnding'
   ],
 )]
 final class VideoFormat extends ConfigEntityBase implements VideoFormatInterface {
 
-  /**
-   * The example ID.
-   */
   protected string $id;
 
-  /**
-   * The example label.
-   */
   protected string $label;
 
-  /**
-   * The example description.
-   */
-  protected string $description;
+  protected string $fileEnding;
 
 }

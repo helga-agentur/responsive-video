@@ -37,16 +37,18 @@ final class VideoFormatForm extends EntityForm {
       '#disabled' => !$this->entity->isNew(),
     ];
 
+    $form['fileEnding'] = [
+      '#type' => 'textfield',
+      '#title' => $this->t('File ending'),
+      '#default_value' => $this->entity->get('fileEnding'),
+      '#required' => TRUE,
+      '#description' => $this->t('File ending. Just one!'),
+    ];
+
     $form['status'] = [
       '#type' => 'checkbox',
       '#title' => $this->t('Enabled'),
       '#default_value' => $this->entity->status(),
-    ];
-
-    $form['description'] = [
-      '#type' => 'textarea',
-      '#title' => $this->t('Description'),
-      '#default_value' => $this->entity->get('description'),
     ];
 
     return $form;

@@ -27,3 +27,18 @@ responsive_video.video_style.*:
       type: string
     description:
       type: string
+
+responsive_video.video_format.*:
+  type: config_entity
+  label: Video Format
+  mapping:
+    id:
+      type: string
+      label: ID
+    label:
+      type: label
+      label: Label
+    uuid:
+      type: string
+    description:
+      type: string

@@ -9,3 +9,9 @@ entity.video_style.add_form:
   title: 'Add video style'
   appears_on:
     - entity.video_style.collection
+
+entity.video_format.add_form:
+  route_name: 'entity.video_format.add_form'
+  title: 'Add video format'
+  appears_on:
+    - entity.video_format.collection

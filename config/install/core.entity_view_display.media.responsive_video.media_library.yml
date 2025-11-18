@@ -1,0 +1,32 @@
+uuid: dd52581e-a8b7-443d-b7a8-9330b0fae22b
+langcode: en
+status: true
+dependencies:
+  config:
+    - core.entity_view_mode.media.media_library
+    - field.field.media.responsive_video.field_media_video_file_1
+    - image.style.medium
+    - media.type.responsive_video
+  module:
+    - image
+id: media.responsive_video.media_library
+targetEntityType: media
+bundle: responsive_video
+mode: media_library
+content:
+  thumbnail:
+    type: image
+    label: hidden
+    settings:
+      image_link: ''
+      image_style: medium
+      image_loading:
+        attribute: lazy
+    third_party_settings: {  }
+    weight: 0
+    region: content
+hidden:
+  created: true
+  field_media_video_file_1: true
+  name: true
+  uid: true

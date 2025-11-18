@@ -1,0 +1,16 @@
+{
+    "name" : "helga-agentur/responsive_video",
+    "description" : "Module for responsive Drupal Videos",
+    "minimum-stability" : "stable",
+    "type": "drupal-module",
+    "license" : "proprietary",
+    "authors" : [
+        {
+            "name" : "Tobias Gasche (toga)",
+            "email" : "tobias@helga.ch"
+        }
+    ],
+    "require" : {
+        "drupal/core": "^10 | ^11"
+    }
+}

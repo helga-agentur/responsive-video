@@ -5,6 +5,7 @@ declare(strict_types=1);
 namespace Drupal\responsive_video\Form;
 
 use Drupal\Core\Entity\EntityForm;
+use Drupal\Core\Entity\EntityTypeManagerInterface;
 use Drupal\Core\Form\FormStateInterface;
 use Drupal\responsive_video\Entity\ResponsiveVideoStyle;
 
@@ -12,6 +13,8 @@ use Drupal\responsive_video\Entity\ResponsiveVideoStyle;
  * Responsive Video Style form.
  */
 final class ResponsiveVideoStyleForm extends EntityForm {
+
+
 
   /**
    * {@inheritdoc}
@@ -43,6 +46,22 @@ final class ResponsiveVideoStyleForm extends EntityForm {
       '#default_value' => $this->entity->status(),
     ];
 
+    $videoStyleOptions = $this->entityTypeManager->getStorage('video_style')->loadMultiple();
+    $availableStyles = array_filter($videoStyleOptions, fn ($style) => $style->status() == 1);
+    $availableStyleNames = [];
+    foreach ($availableStyles as $id => $style) {
+      $availableStyleNames[$id] = $style->label();
+    }
+
+    $form['videoStyles'] = [
+      '#type' => 'checkboxes',
+      '#title' => $this->t('Video styles'),
+      '#options' => $availableStyleNames,
+      '#description' => $this->t('Select one or more video styles.'),
+      '#default_value' => $this->entity->get('videoStyles') ?? [],
+      '#required' => TRUE,
+    ];
+
     $form['breakpoint'] = [
       '#type' => 'textfield',
       '#title' => $this->t('Breakpoints'),
@@ -62,6 +81,7 @@ final class ResponsiveVideoStyleForm extends EntityForm {
     parent::submitForm($form, $form_state);
 
     $this->entity->set('breakpoint', $form_state->getValue('breakpoint'));
+    $this->entity->set('videoStyles', $form_state->getValue('videoStyles'));
   }
 
 

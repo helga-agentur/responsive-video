@@ -49,6 +49,7 @@ use Drupal\responsive_video\ResponsiveVideoStyleListBuilder;
   config_export: [
     'id',
     'label',
+    'videoStyles',
     'breakpoint'
   ],
 )]
@@ -63,6 +64,8 @@ final class ResponsiveVideoStyle extends ConfigEntityBase implements ResponsiveV
    * The example label.
    */
   protected string $label;
+
+  protected array $videoStyles = [];
 
 
   protected string $breakpoint;

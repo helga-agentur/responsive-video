@@ -3,3 +3,5 @@ type: module
 description: 'Module for Responsive Drupal Videos'
 package: Custom
 core_version_requirement: ^10 || ^11
+dependencies:
+  - media_library:media_library

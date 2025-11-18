@@ -1,0 +1,5 @@
+services:
+  responsive_video.event_subscriber:
+    class: Drupal\responsive_video\EventSubscriber\ResponsiveVideoSubscriber
+    tags:
+      - { name: event_subscriber }

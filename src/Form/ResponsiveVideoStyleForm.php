@@ -40,14 +40,9 @@ final class ResponsiveVideoStyleForm extends EntityForm {
       '#disabled' => !$this->entity->isNew(),
     ];
 
-    $form['status'] = [
-      '#type' => 'checkbox',
-      '#title' => $this->t('Enabled'),
-      '#default_value' => $this->entity->status(),
-    ];
-
     $videoStyleOptions = $this->entityTypeManager->getStorage('video_style')->loadMultiple();
     $availableStyles = array_filter($videoStyleOptions, fn ($style) => $style->status() == 1);
+
     $availableStyleNames = [];
     foreach ($availableStyles as $id => $style) {
       $availableStyleNames[$id] = $style->label();
@@ -69,6 +64,13 @@ final class ResponsiveVideoStyleForm extends EntityForm {
       '#description' => $this->t('Breakpoints'),
       '#required' => TRUE,
     ];
+
+    $form['status'] = [
+      '#type' => 'checkbox',
+      '#title' => $this->t('Enabled'),
+      '#default_value' => $this->entity->status(),
+    ];
+
 
     return $form;
   }

@@ -43,14 +43,28 @@ final class ResponsiveVideoStyleForm extends EntityForm {
       '#default_value' => $this->entity->status(),
     ];
 
-    $form['description'] = [
-      '#type' => 'textarea',
-      '#title' => $this->t('Description'),
-      '#default_value' => $this->entity->get('description'),
+    $form['breakpoint'] = [
+      '#type' => 'textfield',
+      '#title' => $this->t('Breakpoints'),
+      '#default_value' => $this->entity->get('breakpoint'),
+      '#description' => $this->t('Breakpoints'),
+      '#required' => TRUE,
     ];
 
     return $form;
   }
+
+
+  /**
+   * {@inheritdoc}
+   */
+  public function submitForm(array &$form, FormStateInterface $form_state): void {
+    parent::submitForm($form, $form_state);
+
+    $this->entity->set('breakpoint', $form_state->getValue('breakpoint'));
+  }
+
+
 
   /**
    * {@inheritdoc}

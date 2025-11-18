@@ -1,0 +1,11 @@
+entity.responsive_video_style.overview:
+  title: Responsive Video Styles
+  parent: system.admin_structure
+  description: 'List of responsive video styles to extend site functionality.'
+  route_name: entity.responsive_video_style.collection
+
+entity.video_style.overview:
+  title: Video Styles
+  parent: system.admin_structure
+  description: 'List of video styles to extend site functionality.'
+  route_name: entity.video_style.collection

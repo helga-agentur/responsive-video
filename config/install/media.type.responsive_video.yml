@@ -1,0 +1,13 @@
+uuid: 2bbd28df-bf59-40ca-994d-5d5e17862b5f
+langcode: en
+status: true
+dependencies: {  }
+id: responsive_video
+label: 'Responsive Video'
+description: ''
+source: video_file
+queue_thumbnail_downloads: false
+new_revision: false
+source_configuration:
+  source_field: field_media_video_file_1
+field_map: {  }

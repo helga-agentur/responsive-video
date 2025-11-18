@@ -1,0 +1,27 @@
+uuid: a6f9bdf9-002b-4e26-9f4c-c6395298b526
+langcode: en
+status: true
+dependencies:
+  config:
+    - core.entity_form_mode.media.media_library
+    - field.field.media.responsive_video.field_media_video_file_1
+    - media.type.responsive_video
+id: media.responsive_video.media_library
+targetEntityType: media
+bundle: responsive_video
+mode: media_library
+content:
+  name:
+    type: string_textfield
+    weight: 0
+    region: content
+    settings:
+      size: 60
+      placeholder: ''
+    third_party_settings: {  }
+hidden:
+  created: true
+  field_media_video_file_1: true
+  path: true
+  status: true
+  uid: true

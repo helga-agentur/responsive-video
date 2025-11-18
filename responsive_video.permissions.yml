@@ -3,3 +3,6 @@ administer responsive_video_style:
 
 administer video_style:
   title: 'Administer video style'
+
+administer video_format:
+  title: 'Administer video format'

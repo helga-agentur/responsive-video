@@ -9,3 +9,9 @@ entity.video_style.overview:
   parent: system.admin_structure
   description: 'List of video styles to extend site functionality.'
   route_name: entity.video_style.collection
+
+entity.video_format.overview:
+  title: Video Formats
+  parent: system.admin_structure
+  description: 'List of video formats to extend site functionality.'
+  route_name: entity.video_format.collection

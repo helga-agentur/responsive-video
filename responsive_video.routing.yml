@@ -61,3 +61,35 @@ entity.video_style.delete_form:
     _title: 'Delete a video style'
   requirements:
     _permission: 'administer video_style'
+
+entity.video_format.collection:
+  path: '/admin/structure/video-format'
+  defaults:
+    _entity_list: 'video_format'
+    _title: 'Video Format configuration'
+  requirements:
+    _permission: 'administer video_format'
+
+entity.video_format.add_form:
+  path: '/admin/structure/video_format/add'
+  defaults:
+    _entity_form: 'video_format.add'
+    _title: 'Add a video format'
+  requirements:
+    _permission: 'administer video_format'
+
+entity.video_format.edit_form:
+  path: '/admin/structure/video-format/{video_format}'
+  defaults:
+    _entity_form: 'video_format.edit'
+    _title: 'Edit a video format'
+  requirements:
+    _permission: 'administer video_format'
+
+entity.video_format.delete_form:
+  path: '/admin/structure/video-format/{video_format}/delete'
+  defaults:
+    _entity_form: 'video_format.delete'
+    _title: 'Delete a video format'
+  requirements:
+    _permission: 'administer video_format'

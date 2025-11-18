@@ -55,14 +55,8 @@ use Drupal\responsive_video\VideoStyleListBuilder;
 )]
 final class VideoStyle extends ConfigEntityBase implements VideoStyleInterface {
 
-  /**
-   * The example ID.
-   */
   protected string $id;
 
-  /**
-   * The example label.
-   */
   protected string $label;
 
   protected ?string $width = null;

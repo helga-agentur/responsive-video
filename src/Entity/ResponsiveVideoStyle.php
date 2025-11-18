@@ -55,18 +55,10 @@ use Drupal\responsive_video\ResponsiveVideoStyleListBuilder;
 )]
 final class ResponsiveVideoStyle extends ConfigEntityBase implements ResponsiveVideoStyleInterface {
 
-  /**
-   * The example ID.
-   */
   protected string $id;
 
-  /**
-   * The example label.
-   */
   protected string $label;
-
   protected array $videoStyles = [];
-
 
   protected string $breakpoint;
 

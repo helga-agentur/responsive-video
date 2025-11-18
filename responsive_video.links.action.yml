@@ -3,3 +3,9 @@ entity.responsive_video_style.add_form:
   title: 'Add responsive video style'
   appears_on:
     - entity.responsive_video_style.collection
+
+entity.video_style.add_form:
+  route_name: 'entity.video_style.add_form'
+  title: 'Add video style'
+  appears_on:
+    - entity.video_style.collection

@@ -1,2 +1,5 @@
 administer responsive_video_style:
   title: 'Administer responsive video style'
+
+administer video_style:
+  title: 'Administer video style'

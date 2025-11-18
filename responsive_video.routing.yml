@@ -29,3 +29,35 @@ entity.responsive_video_style.delete_form:
     _title: 'Delete a responsive video style'
   requirements:
     _permission: 'administer responsive_video_style'
+
+entity.video_style.collection:
+  path: '/admin/structure/video-style'
+  defaults:
+    _entity_list: 'video_style'
+    _title: 'Video Style configuration'
+  requirements:
+    _permission: 'administer video_style'
+
+entity.video_style.add_form:
+  path: '/admin/structure/video_style/add'
+  defaults:
+    _entity_form: 'video_style.add'
+    _title: 'Add a video style'
+  requirements:
+    _permission: 'administer video_style'
+
+entity.video_style.edit_form:
+  path: '/admin/structure/video-style/{video_style}'
+  defaults:
+    _entity_form: 'video_style.edit'
+    _title: 'Edit a video style'
+  requirements:
+    _permission: 'administer video_style'
+
+entity.video_style.delete_form:
+  path: '/admin/structure/video-style/{video_style}/delete'
+  defaults:
+    _entity_form: 'video_style.delete'
+    _title: 'Delete a video style'
+  requirements:
+    _permission: 'administer video_style'

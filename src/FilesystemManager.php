@@ -27,7 +27,9 @@ final readonly class FilesystemManager {
    */
   private function assureBaseDirectoryExists(): void {
     $uri = self::PUBLIC_DIRECTORY . self::BASE_DIRECTORY;
-    $this->fileSystem->prepareDirectory($uri);
+    if (!$this->fileSystem->prepareDirectory($uri)) {
+      $this->fileSystem->mkdir($uri);
+    };
   }
 
   /**
@@ -36,7 +38,9 @@ final readonly class FilesystemManager {
    */
   private function prepareDirectory(string $currentYearMonth): void {
     $uri = 'public://' . self::BASE_DIRECTORY . '/' . $currentYearMonth;
-    $this->fileSystem->prepareDirectory($uri);
+    if (!$this->fileSystem->prepareDirectory($uri)) {
+      $this->fileSystem->mkdir($uri);
+    };
   }
 
   /**

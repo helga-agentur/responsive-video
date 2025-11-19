@@ -5,6 +5,8 @@ declare(strict_types=1);
 namespace Drupal\responsive_video\EventSubscriber;
 
 use Drupal\Core\Entity\EntityTypeEvents;
+use Drupal\responsive_video\Event\ResponsiveVideoEvent;
+use Drupal\responsive_video\FilesystemManager;
 use Symfony\Component\EventDispatcher\EventSubscriberInterface;
 use Symfony\Component\HttpKernel\Event\RequestEvent;
 use Symfony\Component\HttpKernel\Event\ResponseEvent;
@@ -13,12 +15,13 @@ use Symfony\Component\HttpKernel\KernelEvents;
 /**
  * Listens to Entity change events
  */
-final class ResponsiveVideoSubscriber implements EventSubscriberInterface {
+final readonly class ResponsiveVideoSubscriber implements EventSubscriberInterface {
 
-  /**
-   * Kernel request event handler.
-   */
-  public function onVideoCreate(RequestEvent $event): void {
+  public function __construct(
+    public FilesystemManager $filesystemManager,
+  ) {}
+
+  public function onVideoCreate(ResponsiveVideoEvent $event): void {
     /*
      * 0. Check if Filesystem (/files/responsive_videos/YYYY-MM) is created
      * 0.1 Create directory if not present
@@ -29,6 +32,8 @@ final class ResponsiveVideoSubscriber implements EventSubscriberInterface {
      * 5. send all permutations of combinations to converter
      * 6. check if filesystem is ready. Every video is saved in /files/responsive_videos/styles/{sylename}/YYYY-MM
      */
+
+    $this->filesystemManager->prepareDateDirectory();
   }
 
   /**
@@ -38,7 +43,7 @@ final class ResponsiveVideoSubscriber implements EventSubscriberInterface {
     // -> onVideoCreate
   }
 
-  public function onVideoDelete(RequestEvent $event): void {
+  public function onVideoDelete(ResponseEvent $event): void {
     // delete all assets and the original video
   }
 
@@ -47,10 +52,11 @@ final class ResponsiveVideoSubscriber implements EventSubscriberInterface {
    */
   public static function getSubscribedEvents(): array {
     return [
-      EntityTypeEvents::CREATE => ['onVideoCreate'],
-      EntityTypeEvents::UPDATE => ['onVideoUpdate'],
-      EntityTypeEvents::DELETE => ['onVideoDelete'],
+      ResponsiveVideoEvent::CREATE => ['onVideoCreate'],
+      ResponsiveVideoEvent::UPDATE => ['onVideoUpdate'],
+      ResponsiveVideoEvent::DELETE => ['onVideoDelete'],
     ];
   }
+
 
 }

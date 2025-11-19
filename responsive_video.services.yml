@@ -1,5 +1,11 @@
 services:
   responsive_video.event_subscriber:
     class: Drupal\responsive_video\EventSubscriber\ResponsiveVideoSubscriber
+    arguments:
+      - '@responsive_video.filesystem_manager'
     tags:
       - { name: event_subscriber }
+
+  responsive_video.filesystem_manager:
+    class: Drupal\responsive_video\FilesystemManager
+    arguments: ['@file_system']

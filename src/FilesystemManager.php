@@ -53,4 +53,8 @@ final readonly class FilesystemManager {
     $this->prepareDirectory($date);
   }
 
+  public function getMediumFileTargetId(\Drupal\media\MediaInterface $medium): string {
+    return $medium->get('field_media_video_file_1')->target_id;
+  }
+
 }

@@ -51,7 +51,7 @@ final readonly class ResponsiveVideoSubscriber implements EventSubscriberInterfa
     }
 
     if ($currentMediumTargetId !== $originalMediumTargetId) {
-
+      $this->filesystemManager->deleteAssetsOfMedium($original);
     }
 
   }

@@ -45,11 +45,11 @@ final readonly class FilesystemManager {
 
   /**
    * Prepare the current Date directory (Y-m)
+   * @param string $date
    * @return void
    */
-  public function prepareDateDirectory(): void {
+  public function prepareDateDirectory(string $date): void {
     $this->assureBaseDirectoryExists();
-    $date = date('Y-m');
     $this->prepareDirectory($date);
   }
 

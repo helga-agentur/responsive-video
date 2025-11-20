@@ -40,11 +40,24 @@ final readonly class ResponsiveVideoSubscriber implements EventSubscriberInterfa
    * Kernel response event handler.
    */
   public function onVideoUpdate(ResponsiveVideoEvent $event): void {
-    // -> onVideoCreate
+    // delete assets and create new ones if the media file changed
+    $medium = $event->getMedium();
+    // did video file change?
+    $original = $medium->getOriginal();
+    $currentMediumTargetId = $this->filesystemManager->getMediumFileTargetId($medium);
+    $originalMediumTargetId = $this->filesystemManager->getMediumFileTargetId($original);
+    if (!$currentMediumTargetId && !$originalMediumTargetId) {
+      return;
+    }
+
+    if ($currentMediumTargetId !== $originalMediumTargetId) {
+
+    }
+
   }
 
   public function onVideoDelete(ResponsiveVideoEvent $event): void {
-    // delete all assets and the original video
+    // get all assets and delete them
   }
 
   /**

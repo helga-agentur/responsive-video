@@ -28,19 +28,22 @@ final readonly class ResponsiveVideoSubscriber implements EventSubscriberInterfa
      *  get all possible Video Formats
      *  get all responsive-video-styles
      *  get all video-styles activated in responsive-video-styles
+     *  get all video formats
      *  send all permutations of combinations to converter
      *  check if filesystem is ready. Every video is saved in /files/responsive_videos/styles/{sylename}/YYYY-MM
      */
 
     $date = date('Y-m');
     $this->filesystemManager->prepareDateDirectory($date);
+
+    $medium = $event->getMedium();
   }
 
   /**
    * Kernel response event handler.
    */
   public function onVideoUpdate(ResponsiveVideoEvent $event): void {
-    // delete assets and create new ones if the media file changed
+    // delete assets if file of medium changed
     $medium = $event->getMedium();
     // did video file change?
     $original = $medium->getOriginal();
@@ -52,6 +55,9 @@ final readonly class ResponsiveVideoSubscriber implements EventSubscriberInterfa
 
     if ($currentMediumTargetId !== $originalMediumTargetId) {
       $this->filesystemManager->deleteAssetsOfMedium($original);
+
+      // create new assets
+      $this->onVideoCreate($event);
     }
 
   }

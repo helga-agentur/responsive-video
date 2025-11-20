@@ -24,7 +24,7 @@ class HookMedia {
 
     match (true) {
       $media->isNew() => $this->eventDispatcher->dispatch(new ResponsiveVideoEvent($media), ResponsiveVideoEvent::CREATE),
-      !$media->isNew() => $this->eventDispatcher->dispatch('responsive_video.update', $media),
+      !$media->isNew() => $this->eventDispatcher->dispatch(new ResponsiveVideoEvent($media), ResponsiveVideoEvent::UPDATE),
     };
 
   }

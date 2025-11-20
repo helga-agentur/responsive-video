@@ -23,14 +23,13 @@ final readonly class ResponsiveVideoSubscriber implements EventSubscriberInterfa
 
   public function onVideoCreate(ResponsiveVideoEvent $event): void {
     /*
-     * 0. Check if Filesystem (/files/responsive_videos/YYYY-MM) is created
-     * 0.1 Create directory if not present
-     * 1. Save Video in /files/responsive_videos/YYYY-MM
-     * 2. get all possible Video Formats
-     * 3. get all responsive-video-styles
-     * 4. get all video-styles activated in responsive-video-styles
-     * 5. send all permutations of combinations to converter
-     * 6. check if filesystem is ready. Every video is saved in /files/responsive_videos/styles/{sylename}/YYYY-MM
+     *  Check if Filesystem (/files/responsive_videos/YYYY-MM) is created
+     *  Create directory if not present
+     *  get all possible Video Formats
+     *  get all responsive-video-styles
+     *  get all video-styles activated in responsive-video-styles
+     *  send all permutations of combinations to converter
+     *  check if filesystem is ready. Every video is saved in /files/responsive_videos/styles/{sylename}/YYYY-MM
      */
 
     $date = date('Y-m');

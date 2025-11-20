@@ -39,11 +39,11 @@ final readonly class ResponsiveVideoSubscriber implements EventSubscriberInterfa
   /**
    * Kernel response event handler.
    */
-  public function onVideoUpdate(ResponseEvent $event): void {
+  public function onVideoUpdate(ResponsiveVideoEvent $event): void {
     // -> onVideoCreate
   }
 
-  public function onVideoDelete(ResponseEvent $event): void {
+  public function onVideoDelete(ResponsiveVideoEvent $event): void {
     // delete all assets and the original video
   }
 

@@ -29,4 +29,9 @@ class HookMedia {
 
   }
 
+  #[Hook('media_predelete')]
+  public function hookDelete(MediaInterface $media) {
+    $this->eventDispatcher->dispatch(new ResponsiveVideoEvent($media), ResponsiveVideoEvent::DELETE);
+  }
+
 }

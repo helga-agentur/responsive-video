@@ -4,6 +4,7 @@ declare(strict_types=1);
 
 namespace Drupal\responsive_video;
 
+use Drupal\Core\File\FileExists;
 use Drupal\Core\File\FileSystemInterface;
 use Drupal\file\Entity\File;
 use Drupal\media\MediaInterface;
@@ -35,14 +36,18 @@ final readonly class FilesystemManager {
   }
 
   /**
-   * @param string $currentYearMonth
-   * @return void
+   * @param string $directoryName
+   *    directory name without base
+   * @return string
+   *    the full qualified uri
    */
-  private function prepareDirectory(string $currentYearMonth): void {
-    $uri = 'public://' . self::BASE_DIRECTORY . '/' . $currentYearMonth;
+  private function prepareDirectory(string $directoryName): string {
+    $uri = self::PUBLIC_DIRECTORY . self::BASE_DIRECTORY . '/' . $directoryName;
     if (!$this->fileSystem->prepareDirectory($uri)) {
       $this->fileSystem->mkdir($uri);
     };
+
+    return $uri;
   }
 
   /**
@@ -81,5 +86,10 @@ final readonly class FilesystemManager {
     }
   }
 
-
+  public function saveFile(string $fileContents, string $uri) {
+    // directory is without base_directory (responsive_image) but with video-style (s, m, l)
+    $directory = dirname($uri);
+    $fullUri = $this->prepareDirectory($directory) . '/' . basename($uri);
+    $this->fileSystem->saveData($fileContents, $fullUri, FileExists::Replace);
+  }
 }

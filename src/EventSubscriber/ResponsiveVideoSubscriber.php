@@ -4,13 +4,12 @@ declare(strict_types=1);
 
 namespace Drupal\responsive_video\EventSubscriber;
 
-use Drupal\Core\Entity\EntityTypeEvents;
+use Drupal\file\Entity\File;
 use Drupal\responsive_video\Event\ResponsiveVideoEvent;
 use Drupal\responsive_video\FilesystemManager;
+use Drupal\responsive_video\StyleFormatMixer;
 use Symfony\Component\EventDispatcher\EventSubscriberInterface;
-use Symfony\Component\HttpKernel\Event\RequestEvent;
-use Symfony\Component\HttpKernel\Event\ResponseEvent;
-use Symfony\Component\HttpKernel\KernelEvents;
+
 
 /**
  * Listens to Entity change events
@@ -19,6 +18,7 @@ final readonly class ResponsiveVideoSubscriber implements EventSubscriberInterfa
 
   public function __construct(
     public FilesystemManager $filesystemManager,
+    public StyleFormatMixer $styleFormatMixer,
   ) {}
 
   public function onVideoCreate(ResponsiveVideoEvent $event): void {
@@ -37,6 +37,44 @@ final readonly class ResponsiveVideoSubscriber implements EventSubscriberInterfa
     $this->filesystemManager->prepareDateDirectory($date);
 
     $medium = $event->getMedium();
+    $formats = $this->styleFormatMixer->getFormatFileEndings();
+    $respnsiveVideoStyles = $this->styleFormatMixer->getResponsiveVideoStyles();
+
+    $activeVideoStyles = [];
+    foreach ($respnsiveVideoStyles as $respnsiveVideoStyle) {
+      // get videostyles
+      // it doesn't matter for which responsive video-style they're active. If active in at least one, we'll need the converted video
+      $videoStyles = $respnsiveVideoStyle->get('videoStyles');
+      foreach ($videoStyles as $videoStyle) {
+        if ($videoStyle != 0) {
+          $activeVideoStyles[$videoStyle] = $videoStyle;
+        }
+      }
+      $activeVideoStyles = array_unique($activeVideoStyles);
+    }
+
+    foreach ($activeVideoStyles as $activeVideoStyle) {
+      foreach ($formats as $format) {
+        /*
+         * send medium to converter
+         * with sizes from videostyle
+         * with format
+         * save in basepath/Style/YYYY-MM/mediumname.format
+         */
+
+        // dummycode
+        $fileId = $medium->field_media_video_file_1->target_id;
+        $file = File::load($fileId);
+        $fileName = $file->getFilename();
+        $fileContents = file_get_contents($file->getFileUri());
+
+        // send file to converter and save the response
+        // todo remove dummycode. file will be the answer of the api
+
+        $this->filesystemManager->saveFile($fileContents, $date . '/' . $activeVideoStyle . '/' . $fileName);
+      }
+    }
+
   }
 
   /**

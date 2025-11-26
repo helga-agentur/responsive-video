@@ -42,3 +42,16 @@ responsive_video.video_format.*:
       type: string
     description:
       type: string
+
+responsive_video.settings:
+  type: config_object
+  label: 'Responsive Video settings'
+  mapping:
+    converter_plugin:
+      type: string
+      label: 'Selected converter plugin'
+    converter_plugin_configuration:
+      type: sequence
+      label: 'Converter plugin configuration'
+      sequence:
+        type: string

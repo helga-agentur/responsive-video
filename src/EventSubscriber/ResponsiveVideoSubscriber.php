@@ -45,6 +45,8 @@ final readonly class ResponsiveVideoSubscriber implements EventSubscriberInterfa
      *  check if filesystem is ready. Every video is saved in /files/responsive_videos/styles/{sylename}/YYYY-MM
      */
 
+    $this->responsiveVideoConverter->convertMediaToAllStyles($event->getMedium());
+
     $date = date('Y-m');
     $this->filesystemManager->prepareDateDirectory($date);
 

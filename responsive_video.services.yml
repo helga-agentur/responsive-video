@@ -26,3 +26,7 @@ services:
     arguments:
       - '@config.factory'
       - '@plugin.manager.responsive_video_converter_api_plugin'
+
+  responsive_video.converter:
+    class: Drupal\responsive_video\VideoConverterService
+    arguments: ['@responsive_video.filesystem_manager', '@responsive_video.style_format_mixer']

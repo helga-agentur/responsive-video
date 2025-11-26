@@ -4,6 +4,7 @@ services:
     arguments:
       - '@responsive_video.filesystem_manager'
       - '@responsive_video.style_format_mixer'
+      - '@responsive_video.converter_plugin_manager'
     tags:
       - { name: event_subscriber }
 
@@ -15,3 +16,13 @@ services:
     class: Drupal\responsive_video\StyleFormatMixer
     arguments:
       - '@entity_type.manager'
+
+  plugin.manager.responsive_video_converter_api_plugin:
+    class: Drupal\responsive_video\ResponsiveVideoConverterApiPluginPluginManager
+    parent: default_plugin_manager
+
+  responsive_video.converter_plugin_manager:
+    class: Drupal\responsive_video\ConverterPluginManager
+    arguments:
+      - '@config.factory'
+      - '@plugin.manager.responsive_video_converter_api_plugin'

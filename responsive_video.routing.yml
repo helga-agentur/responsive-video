@@ -93,3 +93,11 @@ entity.video_format.delete_form:
     _title: 'Delete a video format'
   requirements:
     _permission: 'administer video_format'
+
+responsive_video.settings:
+  path: '/admin/config/media/responsive-video'
+  defaults:
+    _form: '\Drupal\responsive_video\Form\ResponsiveVideoSettingsForm'
+    _title: 'Responsive Video Settings'
+  requirements:
+    _permission: 'administer responsive video'

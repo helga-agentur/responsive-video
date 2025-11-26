@@ -4,7 +4,12 @@ declare(strict_types=1);
 
 namespace Drupal\responsive_video\EventSubscriber;
 
+use Drupal\Component\Plugin\Exception\InvalidPluginDefinitionException;
+use Drupal\Component\Plugin\Exception\PluginException;
+use Drupal\Component\Plugin\Exception\PluginNotFoundException;
 use Drupal\file\Entity\File;
+use Drupal\responsive_video\ConverterPluginManager;
+use Drupal\responsive_video\Entity\VideoStyle;
 use Drupal\responsive_video\Event\ResponsiveVideoEvent;
 use Drupal\responsive_video\FilesystemManager;
 use Drupal\responsive_video\StyleFormatMixer;
@@ -19,8 +24,15 @@ final readonly class ResponsiveVideoSubscriber implements EventSubscriberInterfa
   public function __construct(
     public FilesystemManager $filesystemManager,
     public StyleFormatMixer $styleFormatMixer,
+    public ConverterPluginManager $pluginManager,
   ) {}
 
+  /**
+   * @throws InvalidPluginDefinitionException
+   * @throws PluginException
+   * @throws PluginNotFoundException
+   * @throws \Exception
+   */
   public function onVideoCreate(ResponsiveVideoEvent $event): void {
     /*
      *  Check if Filesystem (/files/responsive_videos/YYYY-MM) is created
@@ -47,13 +59,17 @@ final readonly class ResponsiveVideoSubscriber implements EventSubscriberInterfa
       $videoStyles = $respnsiveVideoStyle->get('videoStyles');
       foreach ($videoStyles as $videoStyle) {
         if ($videoStyle != 0) {
-          $activeVideoStyles[$videoStyle] = $videoStyle;
+        $style = VideoStyle::load($videoStyle);
+          $activeVideoStyles[$videoStyle] = [
+            'width' => $style->getWidth(),
+            'height' => $style->getHeight(),
+          ];
         }
       }
       $activeVideoStyles = array_unique($activeVideoStyles);
     }
 
-    foreach ($activeVideoStyles as $activeVideoStyle) {
+    foreach ($activeVideoStyles as $activeVideoStyleName => $values) {
       foreach ($formats as $format) {
         /*
          * send medium to converter
@@ -62,16 +78,30 @@ final readonly class ResponsiveVideoSubscriber implements EventSubscriberInterfa
          * save in basepath/Style/YYYY-MM/mediumname.format
          */
 
-        // dummycode
         $fileId = $medium->field_media_video_file_1->target_id;
         $file = File::load($fileId);
         $fileName = $file->getFilename();
-        $fileContents = file_get_contents($file->getFileUri());
 
-        // send file to converter and save the response
-        // todo remove dummycode. file will be the answer of the api
 
-        $this->filesystemManager->saveFile($fileContents, $date . '/' . $activeVideoStyle . '/' . $fileName);
+        $plugin = $this->pluginManager->getActivePlugin();
+
+        $remoteVideoId = $plugin->uploadVideo($file);
+
+        [$width, $height] = [$values['width'], $values['height']];
+
+        if ($width && $height) {
+          $aspectRatio = $width / $height;
+        }
+
+        $video = $plugin->downloadConvertedVideo(
+          publicId: $remoteVideoId,
+          format: $format,
+          width: $width ? (float) $width : 0,
+          height: $height ? (float) $height : 0,
+          aspectRatio: $aspectRatio ?? 0,
+        );
+
+        $this->filesystemManager->saveFile($video, $date . '/' . $activeVideoStyleName . '/' . $fileName);
       }
     }
 

@@ -137,7 +137,7 @@ final class Cloudinary extends ResponsiveVideoConverterApiPluginPluginBase {
   /**
    * @throws GuzzleException
    */
-  public function downloadConvertedVideo(string $publicId, string $format, float $width = 0, float $height = 0, float $aspectRatio = 0): string {
+  public function downloadConvertedVideo(string $publicId, string $format, float $width = 0, float $height = 0, float $aspectRatio = 0, string $codec = null): string {
 
     $cropResize = ($width && $height) ? 'c_fill' : 'c_fit';
 
@@ -147,6 +147,10 @@ final class Cloudinary extends ResponsiveVideoConverterApiPluginPluginBase {
       'aspectRatio' => $aspectRatio ? 'ar_' . $aspectRatio : null,
       'cropResize' => $cropResize,
     ];
+
+    if ($codec) {
+      $transformations['codec'] = 'vc_' . $codec;
+    }
 
     $usedTransformations = array_filter($transformations);
 

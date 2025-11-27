@@ -67,6 +67,16 @@ class HookPreprocess {
           $urlString = $responsiveVideoDirectory . '/' . $datePart . '/' . $activeVideoStyleName .'/' . $videoFileName . '.' . $format;
           $url = $fileUrlGenerator->generateAbsoluteString($urlString);
           $html .= '<source src="' . $url . '" media="(min-width: ' . $breakpoint . ')" type="video/' . $format . '">';
+
+          // av1
+          // kind of stupid like that... maybe there's a better solution. but I have to finish...
+          if ($format == 'mp4') {
+            if (is_dir($responsiveVideoDirectory . '/' . $datePart . '/' . $activeVideoStyleName . '/av1')) {
+              $urlString = $responsiveVideoDirectory . '/' . $datePart . '/' . $activeVideoStyleName .'/av1/' . $videoFileName . '.' . $format;
+              $url = $fileUrlGenerator->generateAbsoluteString($urlString);
+              $html .= '<source src="' . $url . '" media="(min-width: ' . $breakpoint . ')" type=\'video/' . $format . '; codecs="av01"\'>';
+            }
+          }
         }
       }
     }

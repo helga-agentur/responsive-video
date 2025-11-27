@@ -98,6 +98,29 @@ final class VideoConverterService {
           'date' => $this->currentDate,
           'format' => $format,
         ];
+
+        // get an av1 for mp3
+        if ($format == 'mp4') {
+          $convertedVideo = $this->activePlugin->downloadConvertedVideo(
+            publicId   : $remoteVideoId,
+            format     : $format,
+            width      : $width ? (float)$width : 0,
+            height     : $height ? (float)$height : 0,
+            aspectRatio: $aspectRatio ?? 0,
+            codec      : 'av1',
+          );
+
+          $convertedVideos[] = [
+            'remoteVideoId' => $remoteVideoId,
+            'videoContents' => $convertedVideo,
+            'videoStyle' => $activeVideoStyleName,
+            'date' => $this->currentDate,
+            'format' => $format,
+            'codec' => 'av1',
+          ];
+
+        }
+
       }
     }
     return $convertedVideos;
@@ -105,7 +128,14 @@ final class VideoConverterService {
 
   private function saveConvertedVideos(array $videos) {
     foreach ($videos as $video) {
-      $this->filesystemManager->saveFile($video['videoContents'], $this->currentDate . '/' . $video['videoStyle'] . '/' . $video['remoteVideoId'] . '.' . $video['format']);
+
+      $path = $this->currentDate . '/' . $video['videoStyle'] . '/';
+      if ($video['codec']) {
+        $path .= $video['codec'] . '/';
+      }
+      $path .= $video['remoteVideoId'] . '.' . $video['format'];
+
+      $this->filesystemManager->saveFile($video['videoContents'], $path);
     }
   }
 }

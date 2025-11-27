@@ -9,6 +9,7 @@ use Drupal\Component\Plugin\Exception\InvalidPluginDefinitionException;
 use Drupal\Component\Plugin\Exception\PluginNotFoundException;
 use Drupal\Core\Entity\EntityTypeManagerInterface;
 use Drupal\responsive_video\Entity\ResponsiveVideoStyle;
+use Drupal\responsive_video\Entity\VideoStyle;
 
 /**
  * Helper Service to get all possible Style/Format mixture names for a given responsive-video File
@@ -41,7 +42,38 @@ final class StyleFormatMixer {
    */
   public function getResponsiveVideoStyles(): array {
     $responsiveVideoStyles = $this->entityTypeManager->getStorage('responsive_video_style')->loadMultiple();
-    return array_filter($responsiveVideoStyles, fn ($responsiveVideo) => $responsiveVideo->status == 1);
+    $activeVideoStyles = array_filter($responsiveVideoStyles, fn ($responsiveVideo) => $responsiveVideo->status == 1);
+
+    $returnable = [];
+    foreach ($activeVideoStyles as $activeVideoStyle) {
+      // get videostyles
+      // it doesn't matter for which responsive video-style they're active. If active in at least one, we'll need the converted video
+      /** @var array<string, string> $videoStyles */
+      $videoStyles = $activeVideoStyle->get('videoStyles');
+      foreach ($videoStyles as $videoStyle) {
+        if ($videoStyle != 0) {
+          $style = VideoStyle::load($videoStyle);
+          $returnable[$videoStyle] = [
+            'width' => $style->getWidth(),
+            'height' => $style->getHeight(),
+          ];
+        }
+      }
+      $returnable = array_unique($activeVideoStyles);
+    }
+    return $returnable;
   }
 
+  public function getVideoStylesFromResponsiveVideoStyles(array $activeResponsiveVideoStyles) {
+    $videoStyles = [];
+    foreach ($activeResponsiveVideoStyles as $activeResponsiveVideoStyle) {
+      $stylesOfResponsiveStyle = $activeResponsiveVideoStyle->get('videoStyles');
+      foreach ($stylesOfResponsiveStyle as $key => $value) {
+        if (!array_key_exists($key, $videoStyles)) {
+          $videoStyles[$key] = VideoStyle::load($key);
+        }
+      }
+    }
+    return $videoStyles;
+  }
 }

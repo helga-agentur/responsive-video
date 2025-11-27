@@ -39,6 +39,9 @@ The output of a responsive video will be a `<video>` tag with all possible sourc
 _video Styles_ crossed with all your formats. See [Hook Preprocess](./src/Hook/HookPreprocess.php) for more insights.
 Information will be rendered on [media--responsive-video.html.twig](./templates/media--responsive-video.html.twig).
 
-
-
-
+## Cron
+Your Assets will be converted whenever the queue `responsive_video_converterqueue` runs.
+For testing just run `drush queue:run responsive_video_converterqueue`.
+In production, it will be great if you add a cronjob that runs every minute. So it will last maximum 1 minute 'till your
+conversions are sent to your converter API.
+`*/1 * * * * ./vendor/bin/drush queue:run responsive_video_converterqueue`

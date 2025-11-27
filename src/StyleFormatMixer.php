@@ -64,12 +64,17 @@ final class StyleFormatMixer {
     return $returnable;
   }
 
+  /**
+   * @param array $activeResponsiveVideoStyles
+   * @return array
+   *    Array with loaded VideoStyles
+   */
   public function getVideoStylesFromResponsiveVideoStyles(array $activeResponsiveVideoStyles) {
     $videoStyles = [];
     foreach ($activeResponsiveVideoStyles as $activeResponsiveVideoStyle) {
       $stylesOfResponsiveStyle = $activeResponsiveVideoStyle->get('videoStyles');
       foreach ($stylesOfResponsiveStyle as $key => $value) {
-        if (!array_key_exists($key, $videoStyles)) {
+        if (!array_key_exists($key, $videoStyles) && $value != 0) {
           $videoStyles[$key] = VideoStyle::load($key);
         }
       }

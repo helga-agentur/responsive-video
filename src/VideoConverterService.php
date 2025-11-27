@@ -105,7 +105,7 @@ final class VideoConverterService {
 
   private function saveConvertedVideos(array $videos) {
     foreach ($videos as $video) {
-      $this->filesystemManager->saveFile($video['videoContents'], $this->currentDate . '/' . $video['style'] . '/' . $video['remoteVideoId'] . '.' . $video['format']);
+      $this->filesystemManager->saveFile($video['videoContents'], $this->currentDate . '/' . $video['videoStyle'] . '/' . $video['remoteVideoId'] . '.' . $video['format']);
     }
   }
 }

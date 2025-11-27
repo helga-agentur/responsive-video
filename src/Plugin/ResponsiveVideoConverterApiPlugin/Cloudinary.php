@@ -138,11 +138,14 @@ final class Cloudinary extends ResponsiveVideoConverterApiPluginPluginBase {
    * @throws GuzzleException
    */
   public function downloadConvertedVideo(string $publicId, string $format, float $width = 0, float $height = 0, float $aspectRatio = 0): string {
+
+    $cropResize = ($width && $height) ? 'c_fill' : 'c_fit';
+
     $transformations = [
       'width' => $width ? 'w_' . $width : null,
       'height' => $height ? 'h_' . $height : null,
       'aspectRatio' => $aspectRatio ? 'ar_' . $aspectRatio : null,
-      'cropResize' => 'c_crop', // todo it should not always be crop I think...
+      'cropResize' => $cropResize,
     ];
 
     $usedTransformations = array_filter($transformations);

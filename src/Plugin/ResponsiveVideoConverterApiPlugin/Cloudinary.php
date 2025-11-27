@@ -90,8 +90,6 @@ final class Cloudinary extends ResponsiveVideoConverterApiPluginPluginBase {
    * {@inheritdoc}
    */
   public function uploadVideo(File   $video): string {
-
-
     $cloudName = $this->cloudName;
     $apiKey = $this->apiKey;
     $apiSecret = $this->apiSecret;
@@ -100,7 +98,7 @@ final class Cloudinary extends ResponsiveVideoConverterApiPluginPluginBase {
     $timestamp = time();
     $publicId = pathinfo($video->getFilename(), PATHINFO_FILENAME);
 
-// Signatur erstellen
+    // use signature
     $stringToSign = "public_id={$publicId}&timestamp={$timestamp}{$apiSecret}";
     $signature = sha1($stringToSign);
 
@@ -144,7 +142,7 @@ final class Cloudinary extends ResponsiveVideoConverterApiPluginPluginBase {
       'width' => $width ? 'w_' . $width : null,
       'height' => $height ? 'h_' . $height : null,
       'aspectRatio' => $aspectRatio ? 'ar_' . $aspectRatio : null,
-      'cropResize' => 'c_crop',
+      'cropResize' => 'c_crop', // todo it should not always be crop I think...
     ];
 
     $usedTransformations = array_filter($transformations);
@@ -156,59 +154,6 @@ final class Cloudinary extends ResponsiveVideoConverterApiPluginPluginBase {
     $result = $this->makeRequest('GET', $url);
 
     return $result->getBody()->getContents();
-  }
-
-  /**
-   * {@inheritdoc}
-   */
-  public function requestConversionByRemoteId(string $remoteVideoId, VideoStyleInterface $style, VideoFormatInterface $format): string {
-    // Cloudinary uses transformations on-the-fly
-    // Return a transformation string as job_id
-    $transformation = $this->buildTransformation($style, $format);
-
-    // Job ID format: remoteVideoId|transformation
-    return $remoteVideoId . '|' . $transformation;
-  }
-
-  /**
-   * {@inheritdoc}
-   */
-  public function requestConversionByFile(File $file, VideoStyleInterface $style, VideoFormatInterface $format): string {
-    // Upload file first, then request conversion
-    $remoteVideoId = $this->uploadVideo($file);
-
-    return $this->requestConversionByRemoteId($remoteVideoId, $style, $format);
-  }
-
-  /**
-   * {@inheritdoc}
-   */
-  public function downloadConvertedVideoById(string $remoteVideoId): string {
-    $config = $this->getConfiguration();
-    $cloud_name = $config['cloud_name'];
-
-    // If remoteVideoId contains transformation (format: id|transformation)
-    if (str_contains($remoteVideoId, '|')) {
-      [$videoId, $transformation] = explode('|', $remoteVideoId, 2);
-      $download_url = "https://res.cloudinary.com/{$cloud_name}/video/upload/{$transformation}/{$videoId}";
-    } else {
-      // No transformation, download original
-      $download_url = "https://res.cloudinary.com/{$cloud_name}/video/upload/{$remoteVideoId}";
-    }
-
-    $response = $this->makeRequest('GET', $download_url);
-
-    // Extract filename from URL or use a generated one
-    $filename = 'cloudinary_' . basename(parse_url($download_url, PHP_URL_PATH));
-    $destination = 'temporary://' . $filename;
-
-    $this->fileSystem->saveData(
-      $response->getBody()->getContents(),
-      $destination,
-      FileSystemInterface::EXISTS_REPLACE
-    );
-
-    return $destination;
   }
 
   /**
@@ -268,70 +213,5 @@ final class Cloudinary extends ResponsiveVideoConverterApiPluginPluginBase {
   public function submitConfigurationForm(array &$form, FormStateInterface $form_state): void {
     // Nothing special needed - configuration is saved by the form itself
   }
-
-  /**
-   * Builds Cloudinary transformation string from style and format.
-   *
-   * @param VideoStyleInterface $style
-   *   The video style.
-   * @param VideoFormatInterface $format
-   *   The video format.
-   *
-   * @return string
-   *   The transformation string.
-   */
-  private function buildTransformation(VideoStyleInterface $style, VideoFormatInterface $format): string {
-    return '';
-  }
-
-  /**
-   * Tests connection to Cloudinary API (optional helper).
-   *
-   * @param array $config
-   *   Configuration array with api_key, api_secret, cloud_name.
-   *
-   * @return bool
-   *   TRUE if connection successful.
-   * @throws GuzzleException
-   */
-  private function testConnection(array $config): bool {
-    try {
-      $url = "{$config['baseUrl']}/resources/video";
-
-      $response = $this->makeRequest('GET', $url, [
-        'auth' => [$config['api_key'], $config['api_secret']],
-        'query' => ['max_results' => 1],
-      ]);
-
-      return $response->getStatusCode() === 200;
-    } catch (\Exception $e) {
-      $this->logger->warning('Cloudinary connection test failed: @message', [
-        '@message' => $e->getMessage(),
-      ]);
-      return FALSE;
-    }
-  }
-
-  public function requestConversion(string $remote_video_id, VideoStyleInterface $style, VideoFormatInterface $format): string {
-    // todo
-    return '';
-  }
-
-  public function checkConversionStatus(string $job_id): array {
-    // todo
-    return [];
-  }
-
-
-  public function deleteVideo(string $remote_video_id): bool {
-    // todo
-    return false;
-  }
-
-  public function validateConfiguration(FormStateInterface $form_state): array {
-    // todo
-    return [];
-  }
-
 
 }

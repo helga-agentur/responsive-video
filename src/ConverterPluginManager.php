@@ -42,7 +42,10 @@ final class ConverterPluginManager {
 
     $plugin_config = $config->get('converter_plugin_configuration') ?? [];
 
-    return $this->pluginManager->createInstance($plugin_id, $plugin_config);
+    /** @var ResponsiveVideoConverterApiPluginInterface $instance */
+    $instance = $this->pluginManager->createInstance($plugin_id, $plugin_config);
+
+    return $instance;
   }
 
   /**

@@ -15,3 +15,9 @@ entity.video_format.overview:
   parent: system.admin_structure
   description: 'List of video formats to extend site functionality.'
   route_name: entity.video_format.collection
+
+responsive_video.settings:
+  title: 'Responsive Video settings'
+  description: 'Settings for the Responsive Video module.'
+  parent: system.admin_config_media
+  route_name: responsive_video.settings

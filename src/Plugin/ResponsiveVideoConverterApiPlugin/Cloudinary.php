@@ -35,10 +35,10 @@ final class Cloudinary extends ResponsiveVideoConverterApiPluginPluginBase {
   public function __construct(array $configuration, $plugin_id, $plugin_definition, ClientInterface $http_client, FileSystemInterface $file_system, LoggerChannelFactoryInterface $logger_factory) {
     parent::__construct($configuration, $plugin_id, $plugin_definition, $http_client, $file_system, $logger_factory);
     $cloudinaryBase = $this->getConfigValue('baseUrl');
-    $this->cloudName = $this->getConfigValue('cloudName');
+    $this->cloudName = $this->getConfigValue('cloudName', '');
     $this->baseUrl = $cloudinaryBase . '/' . $this->cloudName . '/video';
-    $this->apiSecret = $this->getConfigValue('apiSecret');
-    $this->apiKey = $this->getConfigValue('apiKey');
+    $this->apiSecret = $this->getConfigValue('apiSecret', '');
+    $this->apiKey = $this->getConfigValue('apiKey', '');
 
   }
 
@@ -137,13 +137,20 @@ final class Cloudinary extends ResponsiveVideoConverterApiPluginPluginBase {
   /**
    * @throws GuzzleException
    */
-  public function downloadConvertedVideo(string $publicId, string $format, float $width = 0, float $height = 0, float $aspectRatio = 0): string {
+  public function downloadConvertedVideo(string $publicId, string $format, float $width = 0, float $height = 0, float $aspectRatio = 0, string $codec = null): string {
+
+    $cropResize = ($width && $height) ? 'c_fill' : 'c_fit';
+
     $transformations = [
       'width' => $width ? 'w_' . $width : null,
       'height' => $height ? 'h_' . $height : null,
       'aspectRatio' => $aspectRatio ? 'ar_' . $aspectRatio : null,
-      'cropResize' => 'c_crop', // todo it should not always be crop I think...
+      'cropResize' => $cropResize,
     ];
+
+    if ($codec) {
+      $transformations['codec'] = 'vc_' . $codec;
+    }
 
     $usedTransformations = array_filter($transformations);
 

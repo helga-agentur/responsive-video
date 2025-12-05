@@ -7,6 +7,9 @@ namespace Drupal\responsive_video\EventSubscriber;
 use Drupal\Component\Plugin\Exception\InvalidPluginDefinitionException;
 use Drupal\Component\Plugin\Exception\PluginException;
 use Drupal\Component\Plugin\Exception\PluginNotFoundException;
+use Drupal\Core\Queue\QueueFactoryInterface;
+use Drupal\Core\Queue\QueueInterface;
+use Drupal\Core\Queue\QueueWorkerInterface;
 use Drupal\responsive_video\Event\ResponsiveVideoEvent;
 use Drupal\responsive_video\FilesystemManager;
 use Drupal\responsive_video\VideoConverterService;
@@ -30,7 +33,12 @@ final readonly class ResponsiveVideoSubscriber implements EventSubscriberInterfa
    * @throws \Exception
    */
   public function onVideoCreate(ResponsiveVideoEvent $event): void {
-    $this->videoConverterService->convertMediaToAllStyles($event->getMedium());
+    $medium = $event->getMedium();
+    /** @var QueueFactoryInterface $queueService */
+    $queueService = \Drupal::service('queue');
+    $queue = $queueService->get('responsive_video_converterqueue');
+
+    $queue->createItem($medium);
   }
 
   /**

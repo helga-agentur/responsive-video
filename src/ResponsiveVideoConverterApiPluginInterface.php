@@ -46,9 +46,10 @@ interface ResponsiveVideoConverterApiPluginInterface {
   public function downloadConvertedVideo(
     string $publicId,
     string $format,
-    float $width = 0,
-    float $height = 0,
-    float $aspectRatio = 0
+    float  $width = 0,
+    float  $height = 0,
+    float  $aspectRatio = 0,
+    string $codec = null,
   ): string;
 
   /**

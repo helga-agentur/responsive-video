@@ -45,6 +45,16 @@ final class VideoFormatForm extends EntityForm {
       '#description' => $this->t('File ending. Just one!'),
     ];
 
+    $form['weight'] = [
+      '#type' => 'number',
+      '#title' => $this->t('Weight'),
+      '#default_value' => $this->entity->get('weight'),
+      '#min' => 0,
+      '#max' => 100,
+      '#step' => 1,
+      '#description' => $this->t('The higher the weight, the <b>LOWER</b> the importance. (like a queue)'),
+    ];
+
     $form['status'] = [
       '#type' => 'checkbox',
       '#title' => $this->t('Enabled'),

@@ -9,6 +9,7 @@ use Drupal\Component\Plugin\Exception\InvalidPluginDefinitionException;
 use Drupal\Component\Plugin\Exception\PluginNotFoundException;
 use Drupal\Core\Entity\EntityTypeManagerInterface;
 use Drupal\responsive_video\Entity\ResponsiveVideoStyle;
+use Drupal\responsive_video\Entity\VideoFormat;
 use Drupal\responsive_video\Entity\VideoStyle;
 
 /**
@@ -31,6 +32,9 @@ final class StyleFormatMixer {
    */
   public function getFormatFileEndings(): array {
     $videoFormats = $this->entityTypeManager->getStorage('video_format')->loadMultiple();
+    uasort($videoFormats, function (VideoFormat $a, VideoFormat $b) {
+      return $a->getWeight() <=> $b->getWeight();
+    });
     $activeFormats = array_filter($videoFormats, fn ($videoFormat) => $videoFormat->status == 1);
     return array_map(fn ($videoFormat) => $videoFormat->get('fileEnding'), $activeFormats);
   }
@@ -64,12 +68,17 @@ final class StyleFormatMixer {
     return $returnable;
   }
 
+  /**
+   * @param array $activeResponsiveVideoStyles
+   * @return array
+   *    Array with loaded VideoStyles
+   */
   public function getVideoStylesFromResponsiveVideoStyles(array $activeResponsiveVideoStyles) {
     $videoStyles = [];
     foreach ($activeResponsiveVideoStyles as $activeResponsiveVideoStyle) {
       $stylesOfResponsiveStyle = $activeResponsiveVideoStyle->get('videoStyles');
       foreach ($stylesOfResponsiveStyle as $key => $value) {
-        if (!array_key_exists($key, $videoStyles)) {
+        if (!array_key_exists($key, $videoStyles) && $value != 0) {
           $videoStyles[$key] = VideoStyle::load($key);
         }
       }

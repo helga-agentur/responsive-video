@@ -6,3 +6,8 @@ administer video_style:
 
 administer video_format:
   title: 'Administer video format'
+
+administer responsive video:
+  title: 'Administer Responsive Video'
+  description: 'Configure video converter settings and manage video entities.'
+  restrict access: true

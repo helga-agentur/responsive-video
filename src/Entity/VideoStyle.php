@@ -63,4 +63,12 @@ final class VideoStyle extends ConfigEntityBase implements VideoStyleInterface {
 
   protected ?string $height = null;
 
+  public function getWidth(): string {
+    return $this->width;
+  }
+
+  public function getHeight(): string {
+    return $this->height;
+  }
+
 }

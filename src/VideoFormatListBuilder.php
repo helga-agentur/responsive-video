@@ -5,6 +5,7 @@ declare(strict_types=1);
 namespace Drupal\responsive_video;
 
 use Drupal\Core\Config\Entity\ConfigEntityListBuilder;
+use Drupal\Core\Config\Entity\DraggableListBuilder;
 use Drupal\Core\Entity\EntityInterface;
 
 /**
@@ -18,6 +19,7 @@ final class VideoFormatListBuilder extends ConfigEntityListBuilder {
   public function buildHeader(): array {
     $header['label'] = $this->t('Label');
     $header['id'] = $this->t('Machine name');
+    $header['weight'] = $this->t('Weight');
     $header['status'] = $this->t('Status');
     return $header + parent::buildHeader();
   }
@@ -29,6 +31,7 @@ final class VideoFormatListBuilder extends ConfigEntityListBuilder {
     /** @var \Drupal\responsive_video\VideoFormatInterface $entity */
     $row['label'] = $entity->label();
     $row['id'] = $entity->id();
+    $row['weight'] = $entity->getWeight();
     $row['status'] = $entity->status() ? $this->t('Enabled') : $this->t('Disabled');
     return $row + parent::buildRow($entity);
   }

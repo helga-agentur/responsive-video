@@ -49,7 +49,8 @@ use Drupal\responsive_video\VideoFormatListBuilder;
   config_export: [
     'id',
     'label',
-    'fileEnding'
+    'fileEnding',
+    'weight'
   ],
 )]
 final class VideoFormat extends ConfigEntityBase implements VideoFormatInterface {
@@ -59,5 +60,11 @@ final class VideoFormat extends ConfigEntityBase implements VideoFormatInterface
   protected string $label;
 
   protected string $fileEnding;
+
+  protected ?int $weight = 0;
+
+  public function getWeight(): int {
+    return $this->weight;
+  }
 
 }

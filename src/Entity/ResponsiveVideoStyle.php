@@ -62,4 +62,8 @@ final class ResponsiveVideoStyle extends ConfigEntityBase implements ResponsiveV
 
   protected string $breakpoint;
 
+  public function getBreakPoint(): string {
+    return $this->breakpoint;
+  }
+
 }

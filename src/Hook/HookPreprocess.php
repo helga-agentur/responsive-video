@@ -64,6 +64,7 @@ class HookPreprocess {
       $breakpoint = $responsiveVideoStyle->getBreakpoint();
       foreach ($formats as $format) {
         foreach (array_keys($activeVideoStyles) as $activeVideoStyleName) {
+          // @todo Make sure the $urlString points to a file that exists 
           $urlString = $responsiveVideoDirectory . '/' . $datePart . '/' . $activeVideoStyleName .'/' . $videoFileName . '.' . $format;
           $url = $fileUrlGenerator->generateAbsoluteString($urlString);
           $html .= '<source src="' . $url . '" media="(min-width: ' . $breakpoint . ')" type="video/' . $format . '">';
@@ -72,6 +73,7 @@ class HookPreprocess {
           // kind of stupid like that... maybe there's a better solution. but I have to finish...
           if ($format == 'mp4') {
             if (is_dir($responsiveVideoDirectory . '/' . $datePart . '/' . $activeVideoStyleName . '/av1')) {
+              // @todo Make sure the $urlString points to a file that exists 
               $urlString = $responsiveVideoDirectory . '/' . $datePart . '/' . $activeVideoStyleName .'/av1/' . $videoFileName . '.' . $format;
               $url = $fileUrlGenerator->generateAbsoluteString($urlString);
               $html .= '<source src="' . $url . '" media="(min-width: ' . $breakpoint . ')" type=\'video/' . $format . '; codecs="av01"\'>';

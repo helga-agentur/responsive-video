@@ -13,6 +13,24 @@ At the moment this Readme was written there is no Menu Link (so sorry), so you h
 
 Adjust your Plugins Config form to get all the Information needed for the API.
 
+## Installation and Configuration
+1. `composer require drupal/responsive_video`
+   1. So far this is a private repository, so add it [accordingly](https://getcomposer.org/doc/articles/handling-private-packages.md). 
+2. `drush en responsive_video`
+3. Add video styles `admin/structure/video_style/add`
+4. Add video formats `admin/structure/video-format`
+5. Add responsive video styles `admin/structure/responsive_video_style/add`
+6. Configure Cloudinary API (or any other) `admin/config/media/responsive-video`
+   1. You will find all information inside cloudinary.com or in BitWarden.
+   2. Make sure to only use dummy data for the API Key and the API Secret -> see next step.
+   3. Inside your settings.ddev.php then overwrite the dummy data to your real data as follows
+      ```
+      //overwrite api config for cloudinary
+      $config['responsive_video.settings']['converter_plugin_configuration']['apiKey'] = 'LOOKITUP';
+      $config['responsive_video.settings']['converter_plugin_configuration']['apiSecret'] = 'LOOKITUP';
+      $config['responsive_video.settings']['converter_plugin_configuration']['cloudName'] = 'LOOKITUP';
+      ```
+
 ## Functionality
 This Module allows you to add
 - Responsive Videos

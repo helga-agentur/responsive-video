@@ -201,7 +201,7 @@ final class Cloudinary extends ResponsiveVideoConverterApiPluginPluginBase {
       '#title' => $this->t('Base URL'),
       '#default_value' => $config['baseUrl'] ?? '',
       '#required' => TRUE,
-      '#description' => $this->t('Your API base URL. Probably https://res.cloudinary.com/'),
+      '#description' => $this->t('Your API base URL. Probably https://res.cloudinary.com'),
     ];
 
     return $form;

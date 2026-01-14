@@ -22,6 +22,9 @@ class HookMedia {
   #[Hook('media_presave')]
   public function hookPresave(MediaInterface $media) {
 
+    //make sure to dispatch the events only for responsive videos.
+    if ($media->bundle() !== 'responsive_video') return;
+
     match (true) {
       $media->isNew() => $this->eventDispatcher->dispatch(new ResponsiveVideoEvent($media), ResponsiveVideoEvent::CREATE),
       !$media->isNew() => $this->eventDispatcher->dispatch(new ResponsiveVideoEvent($media), ResponsiveVideoEvent::UPDATE),
@@ -31,6 +34,10 @@ class HookMedia {
 
   #[Hook('media_predelete')]
   public function hookDelete(MediaInterface $media) {
+
+    //make sure to dispatch the events only for responsive videos.
+    if ($media->bundle() !== 'responsive_video') return;
+
     $this->eventDispatcher->dispatch(new ResponsiveVideoEvent($media), ResponsiveVideoEvent::DELETE);
   }
 

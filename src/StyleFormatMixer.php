@@ -63,7 +63,7 @@ final class StyleFormatMixer {
           ];
         }
       }
-      $returnable = array_unique($activeVideoStyles);
+      $returnable = array_unique($activeVideoStyles, SORT_REGULAR);
     }
     return $returnable;
   }

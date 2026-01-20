@@ -74,7 +74,7 @@ class HookPreprocess {
             if (is_dir($responsiveVideoDirectory . '/' . $datePart . '/' . $activeVideoStyleName . '/av1')) {
               $urlString = $responsiveVideoDirectory . '/' . $datePart . '/' . $activeVideoStyleName .'/av1/' . $videoFileName . '.' . $format;
               $url = $fileUrlGenerator->generateAbsoluteString($urlString);
-              $html .= '<source src="' . $url . '" media="(min-width: ' . $breakpoint . ')" type=\'video/' . $format . '; codecs="av01"\'>';
+              $html .= '<source src="' . $url . '" media="(min-width: ' . $breakpoint . ')" type=\'video/' . $format . '; codecs="av01.0.05M.08"\'>';
             }
           }
         }

@@ -23,9 +23,9 @@ final class VideoFormatForm extends EntityForm {
     $form['label'] = [
       '#type' => 'textfield',
       '#title' => $this->t('Label'),
-      '#maxlength' => 255,
-      '#default_value' => $this->entity->label(),
+      '#default_value' => $this->entity->get('label'),
       '#required' => TRUE,
+      '#description' => $this->t('Name of the video format.'),
     ];
 
     $form['id'] = [
@@ -37,12 +37,36 @@ final class VideoFormatForm extends EntityForm {
       '#disabled' => !$this->entity->isNew(),
     ];
 
-    $form['fileEnding'] = [
+    $form['format'] = [
       '#type' => 'textfield',
-      '#title' => $this->t('File ending'),
-      '#default_value' => $this->entity->get('fileEnding'),
+      '#title' => $this->t('Format'),
+      '#default_value' => $this->entity->get('format'),
       '#required' => TRUE,
-      '#description' => $this->t('File ending. Just one!'),
+      '#description' => $this->t('The desired video format. Make sure your API supports this format. Example: <strong>mp4</strong>'),
+    ];
+
+    $form['mimeType'] = [
+      '#type' => 'textfield',
+      '#title' => $this->t('Mime type'),
+      '#default_value' => $this->entity->get('mimeType'),
+      '#required' => TRUE,
+      '#description' => $this->t('The mime type of the video, this will be printed in the video tag. Example: <strong>video/mp4</strong>'),
+    ];
+
+    $form['codec'] = [
+      '#type' => 'textfield',
+      '#title' => $this->t('Codec'),
+      '#default_value' => $this->entity->get('codec'),
+      '#required' => TRUE,
+      '#description' => $this->t('Specify the codec of the video format. Example: <strong>av1</strong>'),
+    ];
+
+    $form['codecLong'] = [
+      '#type' => 'textfield',
+      '#title' => $this->t('Codec Long'),
+      '#default_value' => $this->entity->get('codecLong'),
+      '#required' => TRUE,
+      '#description' => $this->t('Specify the codec in a long version of the video format. This will be printed in the video tag! Example: <strong>av01.0.08M.08</strong>'),
     ];
 
     $form['weight'] = [

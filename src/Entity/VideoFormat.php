@@ -49,7 +49,10 @@ use Drupal\responsive_video\VideoFormatListBuilder;
   config_export: [
     'id',
     'label',
-    'fileEnding',
+    'codec',
+    'codecLong',
+    'format',
+    'mimeType',
     'weight'
   ],
 )]
@@ -59,12 +62,60 @@ final class VideoFormat extends ConfigEntityBase implements VideoFormatInterface
 
   protected string $label;
 
-  protected string $fileEnding;
+  protected string $codec;
+
+  protected string $codecLong;
+
+  protected string $format;
+
+  protected string $mimeType;
 
   protected ?int $weight = 0;
 
+  /**
+   * Returns the codec i.e. av1, h264, vp8, etc.
+   *
+   * @return string
+   */
+  public function getCodec(): string {
+    return $this->codec;
+  }
+
+  /**
+   * Returns the codec in a longer format i.e., avc1.4d002a that will be used in the video tag.
+   *
+   * @return string
+   */
+  public function getCodecLong(): string {
+    return $this->codecLong;
+  }
+
+  /**
+   * Returns the video format i.e. webm, mp4, ogg, etc.
+   *
+   * @return string
+   */
+  public function getFormat(): string {
+    return $this->format;
+  }
+
+  /**
+   * Returns the mime type i.e. video/webm, video/mp4, etc.
+   *
+   * @return string
+   */
+  public function getMimeType(): string {
+    return $this->mimeType;
+  }
+
+
+  /**
+   * @return int
+   */
   public function getWeight(): int {
     return $this->weight;
   }
+
+
 
 }

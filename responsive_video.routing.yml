@@ -101,3 +101,35 @@ responsive_video.settings:
     _title: 'Responsive Video Settings'
   requirements:
     _permission: 'administer responsive video'
+
+entity.responsive_video_style_size.collection:
+  path: '/admin/structure/responsive-video-style-size'
+  defaults:
+    _entity_list: 'responsive_video_style_size'
+    _title: 'Responsive Video Style Size configuration'
+  requirements:
+    _permission: 'administer responsive_video_style_size'
+
+entity.responsive_video_style_size.add_form:
+  path: '/admin/structure/responsive_video_style_size/add'
+  defaults:
+    _entity_form: 'responsive_video_style_size.add'
+    _title: 'Add a responsive video style size'
+  requirements:
+    _permission: 'administer responsive_video_style_size'
+
+entity.responsive_video_style_size.edit_form:
+  path: '/admin/structure/responsive-video-style-size/{responsive_video_style_size}'
+  defaults:
+    _entity_form: 'responsive_video_style_size.edit'
+    _title: 'Edit a responsive video style size'
+  requirements:
+    _permission: 'administer responsive_video_style_size'
+
+entity.responsive_video_style_size.delete_form:
+  path: '/admin/structure/responsive-video-style-size/{responsive_video_style_size}/delete'
+  defaults:
+    _entity_form: 'responsive_video_style_size.delete'
+    _title: 'Delete a responsive video style size'
+  requirements:
+    _permission: 'administer responsive_video_style_size'

@@ -1,3 +1,9 @@
+entity.responsive_video_style_size.overview:
+  title: "Responsive Video Style Sizes"
+  parent: system.admin_structure
+  description: 'List of responsive video style sizes to extend site functionality.'
+  route_name: entity.responsive_video_style_size.collection
+
 entity.responsive_video_style.overview:
   title: Responsive Video Styles
   parent: system.admin_structure

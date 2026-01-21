@@ -11,3 +11,6 @@ administer responsive video:
   title: 'Administer Responsive Video'
   description: 'Configure video converter settings and manage video entities.'
   restrict access: true
+
+administer responsive_video_style_size:
+  title: 'Administer responsive video style size'

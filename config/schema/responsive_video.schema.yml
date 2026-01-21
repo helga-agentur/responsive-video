@@ -55,3 +55,18 @@ responsive_video.settings:
       label: 'Converter plugin configuration'
       sequence:
         type: string
+
+responsive_video.responsive_video_style_size.*:
+  type: config_entity
+  label: Responsive Video Style Size
+  mapping:
+    id:
+      type: string
+      label: ID
+    label:
+      type: label
+      label: Label
+    uuid:
+      type: string
+    description:
+      type: string

@@ -15,3 +15,9 @@ entity.video_format.add_form:
   title: 'Add video format'
   appears_on:
     - entity.video_format.collection
+
+entity.responsive_video_style_size.add_form:
+  route_name: 'entity.responsive_video_style_size.add_form'
+  title: 'Add responsive video style size'
+  appears_on:
+    - entity.responsive_video_style_size.collection

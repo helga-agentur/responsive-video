@@ -20,6 +20,14 @@ final class VideoFormatForm extends EntityForm {
 
     $form = parent::form($form, $form_state);
 
+    $form['label'] = [
+      '#type' => 'textfield',
+      '#title' => $this->t('Label'),
+      '#default_value' => $this->entity->get('label'),
+      '#required' => TRUE,
+      '#description' => $this->t('Name of the video format.'),
+    ];
+
     $form['id'] = [
       '#type' => 'machine_name',
       '#default_value' => $this->entity->id(),
@@ -27,14 +35,6 @@ final class VideoFormatForm extends EntityForm {
         'exists' => [VideoFormat::class, 'load'],
       ],
       '#disabled' => !$this->entity->isNew(),
-    ];
-
-    $form['label'] = [
-      '#type' => 'textfield',
-      '#title' => $this->t('Label'),
-      '#default_value' => $this->entity->get('label'),
-      '#required' => TRUE,
-      '#description' => $this->t('Name of the video format.'),
     ];
 
     $form['format'] = [
@@ -64,7 +64,7 @@ final class VideoFormatForm extends EntityForm {
     $form['codecLong'] = [
       '#type' => 'textfield',
       '#title' => $this->t('Codec Long'),
-      '#default_value' => $this->entity->get('codec_long'),
+      '#default_value' => $this->entity->get('codecLong'),
       '#required' => TRUE,
       '#description' => $this->t('Specify the codec in a long version of the video format. This will be printed in the video tag! Example: <strong>av01.0.08M.08</strong>'),
     ];

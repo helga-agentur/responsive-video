@@ -70,7 +70,8 @@ final readonly class ResponsiveVideoSubscriber implements EventSubscriberInterfa
   }
 
   public function onVideoDelete(ResponsiveVideoEvent $event): void {
-    //todo get all assets and delete them
+    $medium = $event->getMedium();
+    $this->filesystemManager->deleteAssetsOfMedium($medium);
   }
 
   /**

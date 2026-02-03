@@ -21,7 +21,14 @@ class HookPreprocess {
       return;
     }
 
-    $videoFileId = \Drupal::service('responsive_video.filesystem_manager')->getMediumLocalFileTargetId($media);
+    try {
+      $videoFileId = \Drupal::service('responsive_video.filesystem_manager')->getMediumLocalFileTargetId($media);
+    }
+    catch (\Throwable $e) {
+      // If the media has no associated file or the file cannot be loaded,
+      // abort preprocessing to avoid an unhandled exception.
+      return;
+    }
     if (!$videoFileId) {
       return;
     }

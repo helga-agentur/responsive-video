@@ -9,6 +9,7 @@ use Drupal\Core\Plugin\ContainerFactoryPluginInterface;
 use Drupal\Core\Queue\Attribute\QueueWorker;
 use Drupal\Core\Queue\QueueWorkerBase;
 use Drupal\Core\StringTranslation\TranslatableMarkup;
+use Drupal\media\MediaInterface;
 use Drupal\responsive_video\VideoConverterService;
 use Exception;
 use Symfony\Component\DependencyInjection\ContainerInterface;
@@ -51,14 +52,17 @@ final class Converterqueue extends QueueWorkerBase implements ContainerFactoryPl
   /**
    * {@inheritdoc}
    */
-  public function processItem($data): void {
+  public function processItem($medium): void {
+    if (!$medium instanceof MediaInterface) {
+      throw new Exception('Invalid data type in queue item, expected MediaInterface.');
+    }
     // Log any exceptions during processing, but do not halt execution.
     try {
-      $this->videoConverterService->convertMediaToAllStyles($data);
+      $this->videoConverterService->convertMediaToAllStyles($medium);
     }
     catch (\Exception $e) {
       $this->logger->error('Error processing video conversion queue item for media ID %media_id: %message', [
-        '%media_id' => $data,
+        '%media_id' => $medium->id(),
         '%message' => $e->getMessage(),
       ]);
     }

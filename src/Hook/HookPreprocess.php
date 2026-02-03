@@ -21,7 +21,7 @@ class HookPreprocess {
       return;
     }
 
-    $videoFileId = $media->get('field_media_video_file_1')->first()?->target_id;
+    $videoFileId = \Drupal::service('responsive_video.filesystem_manager')->getMediumLocalFileTargetId($media);
     if (!$videoFileId) {
       return;
     }

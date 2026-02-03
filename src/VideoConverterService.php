@@ -46,7 +46,7 @@ final class VideoConverterService {
     $formats = $this->styleFormatMixer->getFormatFileEndings();
     $activeVideoStyles = $this->styleFormatMixer->getResponsiveVideoStyles();
 
-    $file = $this->getFileFromMedium($medium);
+    $file = $this->getLocalFileFromMedium($medium);
 
     $remoteVideoId = $this->activePlugin->uploadVideo($file);
 
@@ -59,9 +59,13 @@ final class VideoConverterService {
     $this->filesystemManager->prepareDateDirectory($this->currentDate);
   }
 
-  private function getFileFromMedium(MediaInterface $medium, string $fieldName = 'field_media_video_file_1'): File {
-    $fileId = $medium->{$fieldName}->target_id;
-    return File::load($fileId);
+  private function getLocalFileFromMedium(MediaInterface $medium): File {
+    $source = $medium->getSource();
+    $value = $source->getSourceFieldValue($medium);
+    if ($value) {
+      return File::load($value);
+    }
+    throw new \Exception("Could not load file from medium with id " . $medium->id());
   }
 
   /**

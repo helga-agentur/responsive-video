@@ -33,3 +33,6 @@ services:
     - '@responsive_video.style_format_mixer'
     - '@responsive_video.converter_plugin_manager'
 
+  logger.channel.responsive_video:
+    parent: logger.channel_base
+    arguments: [ 'responsive_video' ]

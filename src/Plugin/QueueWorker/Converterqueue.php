@@ -17,6 +17,7 @@ use Symfony\Component\DependencyInjection\ContainerInterface;
 #[QueueWorker(
   id: 'responsive_video_converterqueue',
   title: new TranslatableMarkup('ConverterQueue'),
+  cron: ['time' => 300]
 )]
 final class Converterqueue extends QueueWorkerBase implements ContainerFactoryPluginInterface {
 

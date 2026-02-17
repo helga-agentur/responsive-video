@@ -54,8 +54,8 @@ final readonly class ResponsiveVideoSubscriber implements EventSubscriberInterfa
     $medium = $event->getMedium();
     // did video file change?
     $original = $medium->getOriginal();
-    $currentMediumTargetId = $this->filesystemManager->getMediumFileTargetId($medium);
-    $originalMediumTargetId = $this->filesystemManager->getMediumFileTargetId($original);
+    $currentMediumTargetId = $this->filesystemManager->getMediumLocalFileTargetId($medium);
+    $originalMediumTargetId = $this->filesystemManager->getMediumLocalFileTargetId($original);
     if (!$currentMediumTargetId && !$originalMediumTargetId) {
       return;
     }

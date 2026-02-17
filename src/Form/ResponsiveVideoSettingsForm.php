@@ -162,7 +162,7 @@ final class ResponsiveVideoSettingsForm extends ConfigFormBase {
       }
       catch (\Exception $e) {
         // Log error but continue saving
-        \Drupal::logger('responsive_video')->error('Plugin submit error: @message', [
+        $this->logger('responsive_video')->error('Plugin submit error: @message', [
           '@message' => $e->getMessage(),
         ]);
       }

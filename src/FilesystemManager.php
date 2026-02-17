@@ -60,12 +60,17 @@ final readonly class FilesystemManager {
     $this->prepareDirectory($date);
   }
 
-  public function getMediumFileTargetId(MediaInterface $medium): string {
-    return $medium->get('field_media_video_file_1')->target_id;
+  public function getMediumLocalFileTargetId(MediaInterface $medium): string {
+    $source = $medium->getSource();
+    $value = $source->getSourceFieldValue($medium);
+    if ($value) {
+      return $value;
+    }
+    throw new \Exception("Could not load file from medium with id " . $medium->id());
   }
 
   public function deleteAssetsOfMedium(MediaInterface $medium): void {
-    $fileId = $this->getMediumFileTargetId($medium);
+    $fileId = $this->getMediumLocalFileTargetId($medium);
 
     /** @var File $file */
     $file = File::load($fileId);

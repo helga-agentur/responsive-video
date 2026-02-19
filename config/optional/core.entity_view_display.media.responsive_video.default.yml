@@ -1,30 +1,21 @@
-uuid: 31705644-a13f-4699-a5c5-19a0979a05ad
 langcode: en
 status: true
 dependencies:
   config:
-    - field.field.media.responsive_video.field_media_video_file_1
+    - field.field.media.responsive_video.field_media_video_file
     - media.type.responsive_video
   module:
-    - file
+    - responsive_video
 id: media.responsive_video.default
 targetEntityType: media
 bundle: responsive_video
 mode: default
 content:
-  field_media_video_file_1:
-    type: file_video
-    label: visually_hidden
-    settings:
-      controls: true
-      autoplay: false
-      loop: false
-      multiple_file_display_type: tags
-      muted: false
-      playsinline: false
-      width: 640
-      height: 480
-    third_party_settings: {  }
+  field_media_video_file:
+    type: responsive_video_formatter
+    label: hidden
+    settings: {}
+    third_party_settings: {}
     weight: 0
     region: content
 hidden:

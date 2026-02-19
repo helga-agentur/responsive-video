@@ -5,61 +5,125 @@ declare(strict_types=1);
 namespace Drupal\responsive_video;
 
 use Drupal\Core\Form\FormStateInterface;
-use Drupal\file\Entity\File;
+use Drupal\file\FileInterface;
+use Drupal\responsive_video\Entity\VideoCodec;
+use Drupal\responsive_video\Entity\VideoStyle;
 
 /**
  * Interface for responsive_video_converter_api_plugin plugins.
  */
-interface ResponsiveVideoConverterApiPluginInterface {
-
+interface ResponsiveVideoConverterApiPluginInterface
+{
   /**
    * Returns the translated plugin label.
    */
   public function label(): string;
 
   /**
-   * Uploads a video to the converter service.
+   * Uploads a source video to the converter service.
    *
-   * @param File $video
-   *   The video entity to upload.
+   * @param \Drupal\file\FileInterface $file
+   *   The source video file entity.
    *
-   * @return string
-   *   The remote video ID or identifier from the converter service.
+   * @return \Drupal\responsive_video\UploadResult
+   *   Value object containing remoteId, width, height.
    *
    * @throws \Exception When upload fails.
    */
-  public function uploadVideo(File $video): string;
+  public function uploadVideo(FileInterface $file): UploadResult;
 
   /**
-   * Downloads the converted video.
+   * Checks whether an eager transformation is ready for download.
    *
-   * @param string $publicId
-   * @param string $format
-   * @param float $width
-   * @param float $height
-   * @param float $aspectRatio
-   * @return string
-   *   The local file path of the downloaded video.
+   * @param string $remoteId
+   *   The remote identifier returned by uploadVideo().
+   * @param \Drupal\responsive_video\Entity\VideoCodec $codec
+   *   The codec to check.
+   * @param \Drupal\responsive_video\Entity\VideoStyle $style
+   *   The style to check.
+   *
+   * @return bool TRUE if the transformation is ready.
+   */
+  public function isReady(
+    string $remoteId,
+    VideoCodec $codec,
+    VideoStyle $style,
+  ): bool;
+
+  /**
+   * Streams a converted file to a local temp path.
+   *
+   * @param string $remoteId
+   *   The remote identifier returned by uploadVideo().
+   * @param \Drupal\responsive_video\Entity\VideoCodec $codec
+   *   The codec to download.
+   * @param \Drupal\responsive_video\Entity\VideoStyle $style
+   *   The style to download.
+   * @param string $destination
+   *   Absolute path within getTempDirectory(); no in-memory buffering.
    *
    * @throws \Exception When download fails.
    */
-  public function downloadConvertedVideo(
-    string $publicId,
-    string $format,
-    float  $width = 0,
-    float  $height = 0,
-    float  $aspectRatio = 0,
-    string $codec = null,
-  ): string;
+  public function downloadConvertedFile(
+    string $remoteId,
+    VideoCodec $codec,
+    VideoStyle $style,
+    string $destination,
+  ): void;
 
   /**
-   * Gets the configuration form for this API plugin.
+   * Checks whether the poster image is ready for download.
    *
-   * @param array $form
-   *   The form array.
-   * @param FormStateInterface $form_state
-   * @return array
-   *   The form array with plugin-specific configuration fields.
+   * @param string $remoteId
+   *   The remote identifier returned by uploadVideo().
+   *
+   * @return bool TRUE if the poster is ready.
    */
-  public function buildConfigurationForm(array $form, FormStateInterface $form_state): array;
+  public function isPosterReady(string $remoteId): bool;
+
+  /**
+   * Streams the poster image to a local temp path.
+   *
+   * @param string $remoteId
+   *   The remote identifier returned by uploadVideo().
+   * @param string $destination
+   *   Absolute path within getTempDirectory().
+   *
+   * @throws \Exception When download fails.
+   */
+  public function downloadPoster(string $remoteId, string $destination): void;
+
+  /**
+   * Deletes the source video and all derivatives from the remote service.
+   *
+   * @param string $remoteId
+   *   The remote identifier returned by uploadVideo().
+   *
+   * @throws \Exception When deletion fails.
+   */
+  public function deleteRemote(string $remoteId): void;
+
+  /**
+   * Builds the plugin-specific configuration form fields.
+   */
+  public function buildConfigurationForm(
+    array $form,
+    FormStateInterface $form_state,
+  ): array;
+
+  /**
+   * Validates the plugin-specific configuration form.
+   */
+  public function validateConfigurationForm(
+    array &$form,
+    FormStateInterface $form_state,
+  ): void;
+
+  /**
+   * Handles plugin-specific configuration form submission.
+   */
+  public function submitConfigurationForm(
+    array &$form,
+    FormStateInterface $form_state,
+  ): void;
 }

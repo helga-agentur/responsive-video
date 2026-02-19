@@ -1,6 +1,6 @@
 responsive_video.responsive_video_style.*:
   type: config_entity
-  label: Responsive Video Style
+  label: "Responsive Video Style"
   mapping:
     id:
       type: string
@@ -10,12 +10,21 @@ responsive_video.responsive_video_style.*:
       label: Label
     uuid:
       type: string
-    description:
-      type: string
+    status:
+      type: boolean
+      label: Status
+    breakpoint:
+      type: integer
+      label: "Breakpoint (min-width in px)"
+    videoStyles:
+      type: sequence
+      label: "Video Style IDs"
+      sequence:
+        type: string
 
 responsive_video.video_style.*:
   type: config_entity
-  label: Video Style
+  label: "Video Style"
   mapping:
     id:
       type: string
@@ -25,12 +34,19 @@ responsive_video.video_style.*:
       label: Label
     uuid:
       type: string
-    description:
+    status:
+      type: boolean
+      label: Status
+    width:
       type: string
+      label: "Width (px)"
+    height:
+      type: string
+      label: "Height (px)"
 
-responsive_video.video_format.*:
+responsive_video.video_codec.*:
   type: config_entity
-  label: Video Format
+  label: "Video Codec"
   mapping:
     id:
       type: string
@@ -40,18 +56,39 @@ responsive_video.video_format.*:
       label: Label
     uuid:
       type: string
-    description:
+    status:
+      type: boolean
+      label: Status
+    fileEnding:
       type: string
+      label: "File ending"
+    mimeType:
+      type: string
+      label: "MIME type"
+    weight:
+      type: integer
+      label: Weight
 
 responsive_video.settings:
   type: config_object
-  label: 'Responsive Video settings'
+  label: "Responsive Video settings"
   mapping:
     converter_plugin:
       type: string
-      label: 'Selected converter plugin'
+      label: "Active converter plugin ID"
     converter_plugin_configuration:
-      type: sequence
-      label: 'Converter plugin configuration'
-      sequence:
-        type: string
+      type: mapping
+      label: "Converter plugin configuration"
+      mapping: {}
+    output_directory:
+      type: string
+      label: "Output directory (relative to public://)"
+    staleness_threshold:
+      type: integer
+      label: "Staleness threshold in seconds"
+    poll_max_attempts:
+      type: integer
+      label: "Readiness poll max attempts"
+    poll_interval_seconds:
+      type: integer
+      label: "Readiness poll base interval in seconds"

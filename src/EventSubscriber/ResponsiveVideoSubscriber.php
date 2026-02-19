@@ -4,85 +4,90 @@ declare(strict_types=1);
 
 namespace Drupal\responsive_video\EventSubscriber;
 
-use Drupal\Component\Plugin\Exception\InvalidPluginDefinitionException;
-use Drupal\Component\Plugin\Exception\PluginException;
-use Drupal\Component\Plugin\Exception\PluginNotFoundException;
-use Drupal\Core\Queue\QueueFactoryInterface;
-use Drupal\Core\Queue\QueueInterface;
-use Drupal\Core\Queue\QueueWorkerInterface;
+use Drupal\Core\Queue\QueueFactory;
+use Drupal\responsive_video\ConversionRepository;
 use Drupal\responsive_video\Event\ResponsiveVideoEvent;
-use Drupal\responsive_video\FilesystemManager;
-use Drupal\responsive_video\VideoConverterService;
 use Symfony\Component\EventDispatcher\EventSubscriberInterface;
 
-
 /**
- * Listens to Entity change events
+ * Reacts to responsive_video Media entity lifecycle events.
+ *
+ * All dependencies injected; no static calls; no entity saves.
  */
-final readonly class ResponsiveVideoSubscriber implements EventSubscriberInterface {
-
+final class ResponsiveVideoSubscriber implements EventSubscriberInterface
+{
   public function __construct(
-    public FilesystemManager $filesystemManager,
-    public VideoConverterService $videoConverterService,
+    private readonly ConversionRepository $repository,
+    private readonly QueueFactory $queueFactory,
   ) {}
-
-  /**
-   * @throws InvalidPluginDefinitionException
-   * @throws PluginException
-   * @throws PluginNotFoundException
-   * @throws \Exception
-   */
-  public function onVideoCreate(ResponsiveVideoEvent $event): void {
-    $medium = $event->getMedium();
-    /** @var QueueFactoryInterface $queueService */
-    $queueService = \Drupal::service('queue');
-    $queue = $queueService->get('responsive_video_converterqueue');
-
-    $queue->createItem($medium);
-  }
-
-  /**
-   * @param ResponsiveVideoEvent $event
-   * @return void
-   * @throws InvalidPluginDefinitionException
-   * @throws PluginException
-   * @throws PluginNotFoundException
-   */
-  public function onVideoUpdate(ResponsiveVideoEvent $event): void {
-    // todo cleanup too much code for an event subscriber...
-    // delete assets if file of medium changed
-    $medium = $event->getMedium();
-    // did video file change?
-    $original = $medium->getOriginal();
-    $currentMediumTargetId = $this->filesystemManager->getMediumFileTargetId($medium);
-    $originalMediumTargetId = $this->filesystemManager->getMediumFileTargetId($original);
-    if (!$currentMediumTargetId && !$originalMediumTargetId) {
-      return;
-    }
-
-    if ($currentMediumTargetId !== $originalMediumTargetId) {
-      $this->filesystemManager->deleteAssetsOfMedium($original);
-
-      // create new assets
-      $this->onVideoCreate($event);
-    }
-
-  }
-
-  public function onVideoDelete(ResponsiveVideoEvent $event): void {
-    //todo get all assets and delete them
-  }
 
   /**
    * {@inheritdoc}
    */
-  public static function getSubscribedEvents(): array {
+  public static function getSubscribedEvents(): array
+  {
     return [
-      ResponsiveVideoEvent::CREATE => ['onVideoCreate'],
-      ResponsiveVideoEvent::UPDATE => ['onVideoUpdate'],
-      ResponsiveVideoEvent::DELETE => ['onVideoDelete'],
+      ResponsiveVideoEvent::CREATE => "onCreate",
+      ResponsiveVideoEvent::UPDATE => "onUpdate",
+      ResponsiveVideoEvent::DELETE => "onDelete",
     ];
   }
 
+  public function onCreate(ResponsiveVideoEvent $event): void
+  {
+    $mid = (int) $event->getMedium()->id();
+    $this->repository->insert($mid);
+    $this->enqueueConversion($mid);
+  }
 
+  public function onUpdate(ResponsiveVideoEvent $event): void
+  {
+    $mid = (int) $event->getMedium()->id();
+
+    // Collect existing converted file IDs for async cleanup before resetting.
+    $oldFids = $this->repository->deleteFiles($mid);
+    if ($oldFids) {
+      $this->enqueueCleanup($mid, $oldFids);
+    }
+
+    $this->repository->resetToPending($mid);
+    $this->enqueueConversion($mid);
+  }
+
+  public function onDelete(ResponsiveVideoEvent $event): void
+  {
+    $mid = (int) $event->getMedium()->id();
+
+    $fids = $this->repository->deleteFiles($mid);
+
+    $row = $this->repository->load($mid);
+    if ($row && !empty($row["poster_fid"])) {
+      $fids[] = (int) $row["poster_fid"];
+    }
+
+    if ($fids) {
+      $this->enqueueCleanup($mid, $fids);
+    }
+
+    $this->repository->delete($mid);
+  }
+
+  // ---------------------------------------------------------------------------
+  // Private helpers
+  // ---------------------------------------------------------------------------
+
+  private function enqueueConversion(int $mid): void
+  {
+    $this->queueFactory
+      ->get("responsive_video_converterqueue")
+      ->createItem($mid);
+  }
+
+  private function enqueueCleanup(int $mid, array $fids): void
+  {
+    $this->queueFactory->get("responsive_video_cleanupqueue")->createItem([
+      "mid" => $mid,
+      "fids" => $fids,
+    ]);
+  }
 }

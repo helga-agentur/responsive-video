@@ -1,2 +1,6 @@
-converter_plugin: ''
-converter_plugin_configuration: []
+converter_plugin: ""
+converter_plugin_configuration: {}
+output_directory: responsive_videos
+staleness_threshold: 3600
+poll_max_attempts: 10
+poll_interval_seconds: 5

@@ -1,0 +1,30 @@
+{#
+  Template: responsive-video.html.twig
+
+  Available variables:
+  - sources: list of source objects, each with:
+      - url:   absolute URL to the converted video file
+      - type:  MIME type (e.g. 'video/mp4' or 'video/mp4; codecs=av01.0.05M.08')
+      - media: media query string (e.g. '(min-width: 1024px)') or NULL
+  - poster_url:   absolute URL to the poster image, or NULL
+  - fallback_url: absolute URL to the original source file, or NULL
+
+  Sources are ordered largest breakpoint first (for min-width correctness).
+#}
+<video
+  controls
+  playsinline
+  {% if poster_url %}poster="{{ poster_url }}"{% endif %}
+>
+  {% for source in sources %}
+    <source
+      src="{{ source.url }}"
+      type="{{ source.type }}"
+      {% if source.media %}media="{{ source.media }}"{% endif %}
+    >
+  {% endfor %}
+
+  {% if fallback_url %}
+    <source src="{{ fallback_url }}">
+  {% endif %}
+</video>

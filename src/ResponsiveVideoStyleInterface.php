@@ -9,6 +9,9 @@ use Drupal\Core\Config\Entity\ConfigEntityInterface;
 /**
  * Provides an interface defining a responsive video style entity type.
  */
-interface ResponsiveVideoStyleInterface extends ConfigEntityInterface {
+interface ResponsiveVideoStyleInterface extends ConfigEntityInterface
+{
+  public function getBreakpoint(): int;
 
+  public function getVideoStyles(): array;
 }

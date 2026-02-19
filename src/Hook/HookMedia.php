@@ -1,44 +1,74 @@
 <?php
 
+declare(strict_types=1);
+
 namespace Drupal\responsive_video\Hook;
 
-use Drupal\Component\DependencyInjection\ContainerInterface;
 use Drupal\Core\Hook\Attribute\Hook;
 use Drupal\media\MediaInterface;
 use Drupal\responsive_video\Event\ResponsiveVideoEvent;
 use Psr\EventDispatcher\EventDispatcherInterface;
 
-class HookMedia {
+/**
+ * Hook implementations for Media entity events.
+ *
+ * Dispatches after the entity is fully persisted so subscribers can safely
+ * read the DB state and enqueue queue items.
+ */
+final class HookMedia
+{
+  public function __construct(
+    private readonly EventDispatcherInterface $eventDispatcher,
+  ) {}
 
-  public function __construct(readonly EventDispatcherInterface $eventDispatcher) {
-  }
-
-  public static function create(ContainerInterface $container): self {
-    return new static(
-      $container->get('event_dispatcher'),
+  #[Hook("media_insert")]
+  public function onInsert(MediaInterface $media): void
+  {
+    if ($media->bundle() !== "responsive_video") {
+      return;
+    }
+    $this->eventDispatcher->dispatch(
+      new ResponsiveVideoEvent($media),
+      ResponsiveVideoEvent::CREATE,
     );
   }
 
-  #[Hook('media_presave')]
-  public function hookPresave(MediaInterface $media) {
+  #[Hook("media_update")]
+  public function onUpdate(MediaInterface $media): void
+  {
+    if ($media->bundle() !== "responsive_video") {
+      return;
+    }
 
-    //make sure to dispatch the events only for responsive videos.
-    if ($media->bundle() !== 'responsive_video') return;
+    // Only dispatch if the source file actually changed.
+    // Guard against $media->original being NULL (e.g. programmatic saves).
+    $original = $media->original;
+    if ($original === null) {
+      return;
+    }
 
-    match (true) {
-      $media->isNew() => $this->eventDispatcher->dispatch(new ResponsiveVideoEvent($media), ResponsiveVideoEvent::CREATE),
-      !$media->isNew() => $this->eventDispatcher->dispatch(new ResponsiveVideoEvent($media), ResponsiveVideoEvent::UPDATE),
-    };
+    $currentFid = $media->get("field_media_video_file")->target_id;
+    $originalFid = $original->get("field_media_video_file")->target_id;
 
+    if ((string) $currentFid === (string) $originalFid) {
+      return;
+    }
+
+    $this->eventDispatcher->dispatch(
+      new ResponsiveVideoEvent($media),
+      ResponsiveVideoEvent::UPDATE,
+    );
   }
 
-  #[Hook('media_predelete')]
-  public function hookDelete(MediaInterface $media) {
-
-    //make sure to dispatch the events only for responsive videos.
-    if ($media->bundle() !== 'responsive_video') return;
-
-    $this->eventDispatcher->dispatch(new ResponsiveVideoEvent($media), ResponsiveVideoEvent::DELETE);
+  #[Hook("media_delete")]
+  public function onDelete(MediaInterface $media): void
+  {
+    if ($media->bundle() !== "responsive_video") {
+      return;
+    }
+    $this->eventDispatcher->dispatch(
+      new ResponsiveVideoEvent($media),
+      ResponsiveVideoEvent::DELETE,
+    );
   }
-
 }

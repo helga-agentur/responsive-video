@@ -1,103 +1,103 @@
 entity.responsive_video_style.collection:
-  path: '/admin/structure/responsive-video-style'
+  path: "/admin/structure/responsive-video-style"
   defaults:
-    _entity_list: 'responsive_video_style'
-    _title: 'Responsive Video Style configuration'
+    _entity_list: "responsive_video_style"
+    _title: "Responsive Video Styles"
   requirements:
-    _permission: 'administer responsive_video_style'
+    _permission: "administer responsive_video_style"
 
 entity.responsive_video_style.add_form:
-  path: '/admin/structure/responsive_video_style/add'
+  path: "/admin/structure/responsive-video-style/add"
   defaults:
-    _entity_form: 'responsive_video_style.add'
-    _title: 'Add a responsive video style'
+    _entity_form: "responsive_video_style.add"
+    _title: "Add Responsive Video Style"
   requirements:
-    _permission: 'administer responsive_video_style'
+    _permission: "administer responsive_video_style"
 
 entity.responsive_video_style.edit_form:
-  path: '/admin/structure/responsive-video-style/{responsive_video_style}'
+  path: "/admin/structure/responsive-video-style/{responsive_video_style}"
   defaults:
-    _entity_form: 'responsive_video_style.edit'
-    _title: 'Edit a responsive video style'
+    _entity_form: "responsive_video_style.edit"
+    _title: "Edit Responsive Video Style"
   requirements:
-    _permission: 'administer responsive_video_style'
+    _permission: "administer responsive_video_style"
 
 entity.responsive_video_style.delete_form:
-  path: '/admin/structure/responsive-video-style/{responsive_video_style}/delete'
+  path: "/admin/structure/responsive-video-style/{responsive_video_style}/delete"
   defaults:
-    _entity_form: 'responsive_video_style.delete'
-    _title: 'Delete a responsive video style'
+    _entity_form: "responsive_video_style.delete"
+    _title: "Delete Responsive Video Style"
   requirements:
-    _permission: 'administer responsive_video_style'
+    _permission: "administer responsive_video_style"
 
 entity.video_style.collection:
-  path: '/admin/structure/video-style'
+  path: "/admin/structure/video-style"
   defaults:
-    _entity_list: 'video_style'
-    _title: 'Video Style configuration'
+    _entity_list: "video_style"
+    _title: "Video Styles"
   requirements:
-    _permission: 'administer video_style'
+    _permission: "administer video_style"
 
 entity.video_style.add_form:
-  path: '/admin/structure/video_style/add'
+  path: "/admin/structure/video-style/add"
   defaults:
-    _entity_form: 'video_style.add'
-    _title: 'Add a video style'
+    _entity_form: "video_style.add"
+    _title: "Add Video Style"
   requirements:
-    _permission: 'administer video_style'
+    _permission: "administer video_style"
 
 entity.video_style.edit_form:
-  path: '/admin/structure/video-style/{video_style}'
+  path: "/admin/structure/video-style/{video_style}"
   defaults:
-    _entity_form: 'video_style.edit'
-    _title: 'Edit a video style'
+    _entity_form: "video_style.edit"
+    _title: "Edit Video Style"
   requirements:
-    _permission: 'administer video_style'
+    _permission: "administer video_style"
 
 entity.video_style.delete_form:
-  path: '/admin/structure/video-style/{video_style}/delete'
+  path: "/admin/structure/video-style/{video_style}/delete"
   defaults:
-    _entity_form: 'video_style.delete'
-    _title: 'Delete a video style'
+    _entity_form: "video_style.delete"
+    _title: "Delete Video Style"
   requirements:
-    _permission: 'administer video_style'
+    _permission: "administer video_style"
 
-entity.video_format.collection:
-  path: '/admin/structure/video-format'
+entity.video_codec.collection:
+  path: "/admin/structure/video-codec"
   defaults:
-    _entity_list: 'video_format'
-    _title: 'Video Format configuration'
+    _entity_list: "video_codec"
+    _title: "Video Codecs"
   requirements:
-    _permission: 'administer video_format'
+    _permission: "administer video_codec"
 
-entity.video_format.add_form:
-  path: '/admin/structure/video_format/add'
+entity.video_codec.add_form:
+  path: "/admin/structure/video-codec/add"
   defaults:
-    _entity_form: 'video_format.add'
-    _title: 'Add a video format'
+    _entity_form: "video_codec.add"
+    _title: "Add Video Codec"
   requirements:
-    _permission: 'administer video_format'
+    _permission: "administer video_codec"
 
-entity.video_format.edit_form:
-  path: '/admin/structure/video-format/{video_format}'
+entity.video_codec.edit_form:
+  path: "/admin/structure/video-codec/{video_codec}"
   defaults:
-    _entity_form: 'video_format.edit'
-    _title: 'Edit a video format'
+    _entity_form: "video_codec.edit"
+    _title: "Edit Video Codec"
   requirements:
-    _permission: 'administer video_format'
+    _permission: "administer video_codec"
 
-entity.video_format.delete_form:
-  path: '/admin/structure/video-format/{video_format}/delete'
+entity.video_codec.delete_form:
+  path: "/admin/structure/video-codec/{video_codec}/delete"
   defaults:
-    _entity_form: 'video_format.delete'
-    _title: 'Delete a video format'
+    _entity_form: "video_codec.delete"
+    _title: "Delete Video Codec"
   requirements:
-    _permission: 'administer video_format'
+    _permission: "administer video_codec"
 
 responsive_video.settings:
-  path: '/admin/config/media/responsive-video'
+  path: "/admin/config/media/responsive-video"
   defaults:
     _form: '\Drupal\responsive_video\Form\ResponsiveVideoSettingsForm'
-    _title: 'Responsive Video Settings'
+    _title: "Responsive Video Settings"
   requirements:
-    _permission: 'administer responsive video'
+    _permission: "administer responsive video"

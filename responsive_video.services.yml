@@ -1,20 +1,7 @@
 services:
-  responsive_video.event_subscriber:
-    class: Drupal\responsive_video\EventSubscriber\ResponsiveVideoSubscriber
-    arguments:
-      - '@responsive_video.filesystem_manager'
-      - '@responsive_video.converter'
-    tags:
-      - { name: event_subscriber }
-
-  responsive_video.filesystem_manager:
-    class: Drupal\responsive_video\FilesystemManager
-    arguments: ['@file_system']
-
-  responsive_video.style_format_mixer:
-    class: Drupal\responsive_video\StyleFormatMixer
-    arguments:
-      - '@entity_type.manager'
+  logger.channel.responsive_video:
+    parent: logger.channel_base
+    arguments: ["responsive_video"]
 
   plugin.manager.responsive_video_converter_api_plugin:
     class: Drupal\responsive_video\ResponsiveVideoConverterApiPluginPluginManager
@@ -22,14 +9,67 @@ services:
 
   responsive_video.converter_plugin_manager:
     class: Drupal\responsive_video\ConverterPluginManager
+    autowire: false
     arguments:
-      - '@config.factory'
-      - '@plugin.manager.responsive_video_converter_api_plugin'
+      - "@config.factory"
+      - "@plugin.manager.responsive_video_converter_api_plugin"
+
+  Drupal\responsive_video\ConverterPluginManager: "@responsive_video.converter_plugin_manager"
+
+  responsive_video.filesystem_manager:
+    class: Drupal\responsive_video\FilesystemManager
+    autowire: false
+    arguments:
+      - "@file_system"
+      - "@config.factory"
+
+  Drupal\responsive_video\FilesystemManager: "@responsive_video.filesystem_manager"
+
+  responsive_video.conversion_repository:
+    class: Drupal\responsive_video\ConversionRepository
+    autowire: false
+    arguments:
+      - "@database"
+      - "@datetime.time"
+
+  Drupal\responsive_video\ConversionRepository: "@responsive_video.conversion_repository"
 
   responsive_video.converter:
     class: Drupal\responsive_video\VideoConverterService
+    autowire: false
     arguments:
-    - '@responsive_video.filesystem_manager'
-    - '@responsive_video.style_format_mixer'
-    - '@responsive_video.converter_plugin_manager'
+      - "@responsive_video.converter_plugin_manager"
+      - "@responsive_video.conversion_repository"
+      - "@responsive_video.filesystem_manager"
+      - "@entity_type.manager"
+      - "@file_system"
+      - "@file.usage"
+      - "@cache_tags.invalidator"
+      - "@config.factory"
+      - "@logger.channel.responsive_video"
 
+  Drupal\responsive_video\VideoConverterService: "@responsive_video.converter"
+
+  responsive_video.event_subscriber:
+    class: Drupal\responsive_video\EventSubscriber\ResponsiveVideoSubscriber
+    autowire: false
+    arguments:
+      - "@responsive_video.conversion_repository"
+      - "@queue"
+    tags:
+      - { name: event_subscriber }
+
+  responsive_video.hook_media:
+    class: Drupal\responsive_video\Hook\HookMedia
+    autowire: false
+    arguments:
+      - "@event_dispatcher"
+
+  responsive_video.hook_cron:
+    class: Drupal\responsive_video\Hook\HookCron
+    autowire: false
+    arguments:
+      - "@responsive_video.conversion_repository"
+      - "@queue"
+      - "@config.factory"
+      - "@datetime.time"

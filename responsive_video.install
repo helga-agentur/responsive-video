@@ -1,0 +1,142 @@
+<?php
+
+declare(strict_types=1);
+
+/**
+ * @file
+ * Install, update and uninstall functions for the Responsive Video module.
+ */
+
+use Drupal\Core\Database\Database;
+
+/**
+ * Implements hook_install().
+ */
+function responsive_video_install(): void {
+  $schema = Database::getConnection()->schema();
+
+  $schema->createTable('responsive_video_conversion', [
+    'description' => 'Tracks conversion status and results for each responsive_video Media entity.',
+    'fields' => [
+      'mid' => [
+        'description' => 'Media entity ID.',
+        'type' => 'int',
+        'unsigned' => TRUE,
+        'not null' => TRUE,
+      ],
+      'status' => [
+        'description' => 'Conversion status: pending, processing, completed, failed.',
+        'type' => 'varchar',
+        'length' => 16,
+        'not null' => TRUE,
+        'default' => 'pending',
+      ],
+      'remote_id' => [
+        'description' => 'Converter remote public ID. Set after upload, cleared after remote cleanup.',
+        'type' => 'varchar',
+        'length' => 255,
+        'not null' => FALSE,
+        'default' => NULL,
+      ],
+      'poster_fid' => [
+        'description' => 'Managed file ID of the poster image.',
+        'type' => 'int',
+        'unsigned' => TRUE,
+        'not null' => FALSE,
+        'default' => NULL,
+      ],
+      'width' => [
+        'description' => 'Source video width in pixels.',
+        'type' => 'int',
+        'unsigned' => TRUE,
+        'not null' => FALSE,
+        'default' => NULL,
+      ],
+      'height' => [
+        'description' => 'Source video height in pixels.',
+        'type' => 'int',
+        'unsigned' => TRUE,
+        'not null' => FALSE,
+        'default' => NULL,
+      ],
+      'retry_count' => [
+        'description' => 'Number of times this job has been retried after failure.',
+        'type' => 'int',
+        'unsigned' => TRUE,
+        'not null' => TRUE,
+        'default' => 0,
+      ],
+      'changed' => [
+        'description' => 'Unix timestamp of last status change.',
+        'type' => 'int',
+        'unsigned' => TRUE,
+        'not null' => TRUE,
+        'default' => 0,
+      ],
+    ],
+    'primary key' => ['mid'],
+  ]);
+
+  $schema->createTable('responsive_video_conversion_file', [
+    'description' => 'One row per converted file for each responsive_video Media entity.',
+    'fields' => [
+      'id' => [
+        'description' => 'Auto-increment primary key.',
+        'type' => 'serial',
+        'unsigned' => TRUE,
+        'not null' => TRUE,
+      ],
+      'mid' => [
+        'description' => 'Media entity ID.',
+        'type' => 'int',
+        'unsigned' => TRUE,
+        'not null' => TRUE,
+      ],
+      'codec_id' => [
+        'description' => 'VideoCodec config entity ID.',
+        'type' => 'varchar',
+        'length' => 64,
+        'not null' => TRUE,
+      ],
+      'style_id' => [
+        'description' => 'VideoStyle config entity ID.',
+        'type' => 'varchar',
+        'length' => 64,
+        'not null' => TRUE,
+      ],
+      'fid' => [
+        'description' => 'Managed file ID.',
+        'type' => 'int',
+        'unsigned' => TRUE,
+        'not null' => TRUE,
+      ],
+    ],
+    'primary key' => ['id'],
+    'indexes' => [
+      'mid' => ['mid'],
+    ],
+  ]);
+}
+
+/**
+ * Implements hook_uninstall().
+ */
+function responsive_video_uninstall(): void {
+  $schema = Database::getConnection()->schema();
+  $schema->dropTable('responsive_video_conversion_file');
+  $schema->dropTable('responsive_video_conversion');
+}
+
+/**
+ * Add retry_count column to responsive_video_conversion table.
+ */
+function responsive_video_update_10001(): void {
+  $schema = Database::getConnection()->schema();
+  $schema->addField('responsive_video_conversion', 'retry_count', [
+    'description' => 'Number of times this job has been retried after failure.',
+    'type' => 'int',
+    'unsigned' => TRUE,
+    'not null' => TRUE,
+    'default' => 0,
+  ]);
+}

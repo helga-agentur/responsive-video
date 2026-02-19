@@ -1,13 +1,13 @@
 administer responsive_video_style:
-  title: 'Administer responsive video style'
+  title: "Administer Responsive Video Styles"
 
 administer video_style:
-  title: 'Administer video style'
+  title: "Administer Video Styles"
 
-administer video_format:
-  title: 'Administer video format'
+administer video_codec:
+  title: "Administer Video Codecs"
 
 administer responsive video:
-  title: 'Administer Responsive Video'
-  description: 'Configure video converter settings and manage video entities.'
+  title: "Administer Responsive Video"
+  description: "Configure video converter settings."
   restrict access: true

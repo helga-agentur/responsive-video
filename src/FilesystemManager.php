@@ -4,92 +4,93 @@ declare(strict_types=1);
 
 namespace Drupal\responsive_video;
 
+use Drupal\Core\Config\ConfigFactoryInterface;
 use Drupal\Core\File\FileExists;
 use Drupal\Core\File\FileSystemInterface;
-use Drupal\file\Entity\File;
-use Drupal\media\MediaInterface;
 
 /**
- * This is a Helperservice to manage Filesystem related Tasks for Responsive Videos
+ * Manages the public filesystem directories used by Responsive Video.
  */
-final readonly class FilesystemManager {
-
-  const BASE_DIRECTORY = 'responsive_videos';
-  const PUBLIC_DIRECTORY = 'public://';
-
-  /**
-   * Constructs a FilesystemManager object.
-   */
+class FilesystemManager
+{
   public function __construct(
     private FileSystemInterface $fileSystem,
+    private ConfigFactoryInterface $configFactory,
   ) {}
 
-
   /**
-   * Checks if the base directory exists, creates if not
+   * Returns the configured output directory name (relative to public://).
    */
-  private function assureBaseDirectoryExists(): void {
-    $uri = self::PUBLIC_DIRECTORY . self::BASE_DIRECTORY;
-    if (!$this->fileSystem->prepareDirectory($uri)) {
-      $this->fileSystem->mkdir($uri);
-    };
-  }
-
-  /**
-   * @param string $directoryName
-   *    directory name without base
-   * @return string
-   *    the full qualified uri
-   */
-  private function prepareDirectory(string $directoryName): string {
-    $uri = self::PUBLIC_DIRECTORY . self::BASE_DIRECTORY . '/' . $directoryName;
-    if (!$this->fileSystem->prepareDirectory($uri)) {
-      $this->fileSystem->mkdir($uri);
-    };
-
-    return $uri;
+  public function outputDirectory(): string
+  {
+    $dir = $this->configFactory
+      ->get("responsive_video.settings")
+      ->get("output_directory");
+    return $dir ?: "responsive_videos";
   }
 
   /**
-   * Prepare the current Date directory (Y-m)
-   * @param string $date
-   * @return void
+   * Returns the base URI: public://<output_directory>/Y-m/.
    */
-  public function prepareDateDirectory(string $date): void {
-    $this->assureBaseDirectoryExists();
-    $this->prepareDirectory($date);
+  public function dateBaseUri(): string
+  {
+    return "public://" . $this->outputDirectory() . "/" . date("Y-m");
   }
 
-  public function getMediumFileTargetId(MediaInterface $medium): string {
-    return $medium->get('field_media_video_file_1')->target_id;
+  /**
+   * Ensures the date-scoped output directory exists and is writable.
+   */
+  public function prepareOutputDirectory(): void
+  {
+    $uri = $this->dateBaseUri();
+    $this->fileSystem->prepareDirectory(
+      $uri,
+      FileSystemInterface::CREATE_DIRECTORY |
+        FileSystemInterface::MODIFY_PERMISSIONS,
+    );
   }
 
-  public function deleteAssetsOfMedium(MediaInterface $medium): void {
-    $fileId = $this->getMediumFileTargetId($medium);
-
-    /** @var File $file */
-    $file = File::load($fileId);
-    $fileUri = $file->getFileUri();
-
-    $fileNameFull = basename($fileUri);
-    $fileName = pathinfo($fileNameFull, PATHINFO_FILENAME);
-    $dateDirectoryName = basename(dirname($fileUri));
-
-    $base = $this->fileSystem->realpath(self::PUBLIC_DIRECTORY . self::BASE_DIRECTORY);
-
-    $pattern = "{$base}/*/{$dateDirectoryName}/{$fileName}.*";
-
-    $mediumAssets = glob($pattern);
-
-    foreach ($mediumAssets as $asset) {
-      $this->fileSystem->delete($asset);
-    }
+  /**
+   * Moves a temp file to its final public URI, replacing any existing file.
+   *
+   * @param string $tempPath  Absolute temp path (from getTempDirectory()).
+   * @param string $finalUri  Final public:// URI.
+   */
+  public function moveToFinal(string $tempPath, string $finalUri): void
+  {
+    $directory = dirname($finalUri);
+    $this->fileSystem->prepareDirectory(
+      $directory,
+      FileSystemInterface::CREATE_DIRECTORY |
+        FileSystemInterface::MODIFY_PERMISSIONS,
+    );
+    $this->fileSystem->move($tempPath, $finalUri, FileExists::Replace);
   }
 
-  public function saveFile(string $fileContents, string $uri) {
-    // directory is without base_directory (responsive_image) but with video-style (s, m, l)
-    $directory = dirname($uri);
-    $fullUri = $this->prepareDirectory($directory) . '/' . basename($uri);
-    $this->fileSystem->saveData($fileContents, $fullUri, FileExists::Replace);
+  /**
+   * Builds the final URI for a converted video file.
+   *
+   * @param int    $mid      Media entity ID.
+   * @param string $codecId  VideoCodec entity ID.
+   * @param string $styleId  VideoStyle entity ID.
+   * @param string $ext      File extension (without dot).
+   */
+  public function convertedFileUri(
+    int $mid,
+    string $codecId,
+    string $styleId,
+    string $ext,
+  ): string {
+    return $this->dateBaseUri() . "/{$mid}/{$styleId}/{$codecId}.{$ext}";
+  }
+
+  /**
+   * Builds the final URI for the poster image.
+   *
+   * @param int $mid  Media entity ID.
+   */
+  public function posterUri(int $mid): string
+  {
+    return $this->dateBaseUri() . "/{$mid}/poster.jpg";
   }
 }

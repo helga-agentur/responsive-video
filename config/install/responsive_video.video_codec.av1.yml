@@ -1,0 +1,7 @@
+langcode: en
+status: true
+id: av1
+label: 'AV1'
+fileEnding: mp4
+mimeType: 'video/mp4; codecs=av01.0.05M.08'
+weight: 2

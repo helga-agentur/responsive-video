@@ -1,0 +1,7 @@
+langcode: en
+status: true
+id: h264
+label: 'H.264'
+fileEnding: mp4
+mimeType: 'video/mp4'
+weight: 1

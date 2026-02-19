@@ -1,12 +1,11 @@
-uuid: d20fc9e2-dc04-4023-aeb1-f057ee0ac154
 langcode: en
 status: true
 dependencies:
   module:
     - file
     - media
-id: media.field_media_video_file_1
-field_name: field_media_video_file_1
+id: media.field_media_video_file
+field_name: field_media_video_file
 entity_type: media
 type: file
 settings:
@@ -18,6 +17,6 @@ module: file
 locked: false
 cardinality: 1
 translatable: true
-indexes: {  }
+indexes: {}
 persist_with_no_fields: false
 custom_storage: false

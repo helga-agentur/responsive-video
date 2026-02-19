@@ -1,0 +1,6 @@
+langcode: en
+status: true
+id: 480p
+label: '480p'
+width: '480'
+height: null

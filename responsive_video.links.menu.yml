@@ -1,23 +1,23 @@
 entity.responsive_video_style.overview:
-  title: Responsive Video Styles
+  title: "Responsive Video Styles"
   parent: system.admin_structure
-  description: 'List of responsive video styles to extend site functionality.'
+  description: "Configure responsive video breakpoint sets."
   route_name: entity.responsive_video_style.collection
 
 entity.video_style.overview:
-  title: Video Styles
+  title: "Video Styles"
   parent: system.admin_structure
-  description: 'List of video styles to extend site functionality.'
+  description: "Configure video size variants."
   route_name: entity.video_style.collection
 
-entity.video_format.overview:
-  title: Video Formats
+entity.video_codec.overview:
+  title: "Video Codecs"
   parent: system.admin_structure
-  description: 'List of video formats to extend site functionality.'
-  route_name: entity.video_format.collection
+  description: "Configure video codec definitions."
+  route_name: entity.video_codec.collection
 
 responsive_video.settings:
-  title: 'Responsive Video settings'
-  description: 'Settings for the Responsive Video module.'
+  title: "Responsive Video settings"
+  description: "Settings for the Responsive Video module."
   parent: system.admin_config_media
   route_name: responsive_video.settings

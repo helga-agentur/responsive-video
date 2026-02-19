@@ -9,8 +9,8 @@ use Drupal\Core\Config\ConfigFactoryInterface;
 /**
  * Service to manage the active converter plugin.
  */
-final class ConverterPluginManager {
-
+class ConverterPluginManager
+{
   /**
    * Constructs a ConverterPluginManager object.
    *
@@ -32,18 +32,22 @@ final class ConverterPluginManager {
    *
    * @throws \Drupal\Component\Plugin\Exception\PluginException
    */
-  public function getActivePlugin(): ?ResponsiveVideoConverterApiPluginInterface {
-    $config = $this->configFactory->get('responsive_video.settings');
-    $plugin_id = $config->get('converter_plugin');
+  public function getActivePlugin(): ?ResponsiveVideoConverterApiPluginInterface
+  {
+    $config = $this->configFactory->get("responsive_video.settings");
+    $plugin_id = $config->get("converter_plugin");
 
     if (empty($plugin_id)) {
-      return NULL;
+      return null;
     }
 
-    $plugin_config = $config->get('converter_plugin_configuration') ?? [];
+    $plugin_config = $config->get("converter_plugin_configuration") ?? [];
 
     /** @var ResponsiveVideoConverterApiPluginInterface $instance */
-    $instance = $this->pluginManager->createInstance($plugin_id, $plugin_config);
+    $instance = $this->pluginManager->createInstance(
+      $plugin_id,
+      $plugin_config,
+    );
 
     return $instance;
   }
@@ -54,9 +58,10 @@ final class ConverterPluginManager {
    * @return bool
    *   TRUE if a plugin is configured, FALSE otherwise.
    */
-  public function hasActivePlugin(): bool {
-    $config = $this->configFactory->get('responsive_video.settings');
-    return !empty($config->get('converter_plugin'));
+  public function hasActivePlugin(): bool
+  {
+    $config = $this->configFactory->get("responsive_video.settings");
+    return !empty($config->get("converter_plugin"));
   }
 
   /**
@@ -65,9 +70,9 @@ final class ConverterPluginManager {
    * @return string|null
    *   The plugin ID or NULL if none configured.
    */
-  public function getActivePluginId(): ?string {
-    $config = $this->configFactory->get('responsive_video.settings');
-    return $config->get('converter_plugin');
+  public function getActivePluginId(): ?string
+  {
+    $config = $this->configFactory->get("responsive_video.settings");
+    return $config->get("converter_plugin");
   }
-
 }

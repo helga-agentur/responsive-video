@@ -1,7 +1,9 @@
-name: 'Responsive Video'
+name: "Responsive Video"
 type: module
-description: 'Module for Responsive Drupal Videos'
+description: "Responsive video delivery via pluggable converter backends (default: Cloudinary)."
 package: Custom
 core_version_requirement: ^10 || ^11
 dependencies:
-  - media_library:media_library
+  - drupal:media
+  - drupal:file
+  - drupal:media_library

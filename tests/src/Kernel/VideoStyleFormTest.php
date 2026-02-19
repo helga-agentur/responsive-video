@@ -32,6 +32,10 @@ class VideoStyleFormTest extends KernelTestBase
   {
     parent::setUp();
     $this->installEntitySchema("user");
+    $this->installSchema("responsive_video", [
+      "responsive_video_conversion",
+      "responsive_video_conversion_file",
+    ]);
   }
 
   /**

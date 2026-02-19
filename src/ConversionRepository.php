@@ -240,6 +240,24 @@ class ConversionRepository
   }
 
   /**
+   * Returns all MIDs with status 'completed'.
+   *
+   * @return int[]
+   */
+  public function loadCompletedMids(): array
+  {
+    return array_map(
+      "intval",
+      $this->database
+        ->select("responsive_video_conversion", "c")
+        ->fields("c", ["mid"])
+        ->condition("c.status", "completed")
+        ->execute()
+        ->fetchCol(),
+    );
+  }
+
+  /**
    * Returns all MIDs with status 'failed' and retry_count below the given max.
    *
    * @param int $maxRetries Only return rows where retry_count < $maxRetries.

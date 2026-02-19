@@ -73,3 +73,10 @@ services:
       - "@queue"
       - "@config.factory"
       - "@datetime.time"
+
+  responsive_video.hook_video_style:
+    class: Drupal\responsive_video\Hook\HookVideoStyle
+    autowire: false
+    arguments:
+      - "@responsive_video.conversion_repository"
+      - "@queue"

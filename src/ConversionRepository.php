@@ -240,7 +240,11 @@ class ConversionRepository
   }
 
   /**
-   * Returns all MIDs with status 'completed'.
+   * Returns all tracked MIDs regardless of status.
+   *
+   * Used to re-queue conversions when the style/codec configuration changes.
+   * All statuses are included so that jobs which are pending or processing
+   * at the time of the config change are also re-converted with the new set.
    *
    * @return int[]
    */
@@ -251,7 +255,6 @@ class ConversionRepository
       $this->database
         ->select("responsive_video_conversion", "c")
         ->fields("c", ["mid"])
-        ->condition("c.status", "completed")
         ->execute()
         ->fetchCol(),
     );

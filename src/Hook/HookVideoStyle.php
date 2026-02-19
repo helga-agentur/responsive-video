@@ -7,13 +7,15 @@ namespace Drupal\responsive_video\Hook;
 use Drupal\Core\Hook\Attribute\Hook;
 use Drupal\Core\Queue\QueueFactory;
 use Drupal\responsive_video\ConversionRepository;
+use Drupal\responsive_video\Entity\ResponsiveVideoStyle;
+use Drupal\responsive_video\Entity\VideoCodec;
 use Drupal\responsive_video\Entity\VideoStyle;
 
 /**
- * Hook implementations for VideoStyle config entity events.
+ * Hook implementations for VideoStyle, VideoCodec and ResponsiveVideoStyle config entity events.
  *
- * When a style is added, changed or removed, all completed conversions are
- * reset to pending and re-enqueued so the new style set is applied.
+ * When a style or codec is added, changed or removed, all completed conversions
+ * are reset to pending and re-enqueued so the new configuration is applied.
  */
 final class HookVideoStyle
 {
@@ -36,6 +38,42 @@ final class HookVideoStyle
 
   #[Hook("video_style_delete")]
   public function onDelete(VideoStyle $style): void
+  {
+    $this->requeueAllCompleted();
+  }
+
+  #[Hook("video_codec_insert")]
+  public function onCodecInsert(VideoCodec $codec): void
+  {
+    $this->requeueAllCompleted();
+  }
+
+  #[Hook("video_codec_update")]
+  public function onCodecUpdate(VideoCodec $codec): void
+  {
+    $this->requeueAllCompleted();
+  }
+
+  #[Hook("video_codec_delete")]
+  public function onCodecDelete(VideoCodec $codec): void
+  {
+    $this->requeueAllCompleted();
+  }
+
+  #[Hook("responsive_video_style_insert")]
+  public function onResponsiveVideoStyleInsert(ResponsiveVideoStyle $style): void
+  {
+    $this->requeueAllCompleted();
+  }
+
+  #[Hook("responsive_video_style_update")]
+  public function onResponsiveVideoStyleUpdate(ResponsiveVideoStyle $style): void
+  {
+    $this->requeueAllCompleted();
+  }
+
+  #[Hook("responsive_video_style_delete")]
+  public function onResponsiveVideoStyleDelete(ResponsiveVideoStyle $style): void
   {
     $this->requeueAllCompleted();
   }

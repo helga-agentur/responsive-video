@@ -225,7 +225,7 @@ final class Cloudinary extends ResponsiveVideoConverterApiPluginPluginBase
 
     $response = $this->httpClient->post($uploadUrl, [
       "multipart" => $multipart,
-      "timeout" => 300,
+      "timeout" => 2400,
     ]);
     $result = json_decode($response->getBody()->getContents(), true);
 

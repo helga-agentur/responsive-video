@@ -256,7 +256,7 @@ final class Cloudinary extends ResponsiveVideoConverterApiPluginPluginBase
   ): bool {
     $url = $this->deliveryUrl($remoteId, $codec, $style);
     try {
-      $response = $this->httpClient->head($url);
+      $response = $this->httpClient->request("HEAD", $url);
       return $response->getStatusCode() === 200;
     } catch (\Throwable) {
       return false;
@@ -270,7 +270,7 @@ final class Cloudinary extends ResponsiveVideoConverterApiPluginPluginBase
   {
     $url = $this->posterUrl($remoteId);
     try {
-      $response = $this->httpClient->head($url);
+      $response = $this->httpClient->request("HEAD", $url);
       return $response->getStatusCode() === 200;
     } catch (\Throwable) {
       return false;

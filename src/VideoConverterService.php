@@ -19,7 +19,7 @@ use Psr\Log\LoggerInterface;
  * Called only from the converter queue worker. All dependencies are injected;
  * no static calls. Never resaves the Media entity.
  */
-final class VideoConverterService
+class VideoConverterService
 {
   public function __construct(
     private readonly ConverterPluginManager $pluginManager,

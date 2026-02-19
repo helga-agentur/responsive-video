@@ -11,7 +11,7 @@ use Drupal\Core\File\FileSystemInterface;
 /**
  * Manages the public filesystem directories used by Responsive Video.
  */
-final readonly class FilesystemManager
+class FilesystemManager
 {
   public function __construct(
     private FileSystemInterface $fileSystem,

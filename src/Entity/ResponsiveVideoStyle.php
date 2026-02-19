@@ -53,7 +53,7 @@ use Drupal\responsive_video\ResponsiveVideoStyleListBuilder;
     config_export: ["id", "label", "videoStyles", "breakpoint", "status"],
   ),
 ]
-final class ResponsiveVideoStyle extends ConfigEntityBase implements
+class ResponsiveVideoStyle extends ConfigEntityBase implements
   ResponsiveVideoStyleInterface
 {
   protected string $id;

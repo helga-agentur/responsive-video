@@ -6,13 +6,14 @@ namespace Drupal\responsive_video;
 
 use Drupal\Component\Datetime\TimeInterface;
 use Drupal\Core\Database\Connection;
+use Drupal\Core\Database\Statement\FetchAs;
 
 /**
  * Repository for conversion state stored in the responsive_video_conversion tables.
  *
  * All DB access for conversion state goes through this service.
  */
-final class ConversionRepository
+class ConversionRepository
 {
   public function __construct(
     private readonly Connection $database,
@@ -182,7 +183,7 @@ final class ConversionRepository
       ->fields("f")
       ->condition("f.mid", $mid)
       ->execute()
-      ->fetchAll(\PDO::FETCH_ASSOC);
+      ->fetchAll(FetchAs::Associative);
   }
 
   /**

@@ -12,15 +12,28 @@ use Drupal\responsive_video\Attribute\ResponsiveVideoConverterApiPlugin;
 /**
  * ResponsiveVideoConverterApiPlugin plugin manager.
  */
-final class ResponsiveVideoConverterApiPluginPluginManager extends DefaultPluginManager {
-
+class ResponsiveVideoConverterApiPluginPluginManager extends
+  DefaultPluginManager
+{
   /**
    * Constructs the object.
    */
-  public function __construct(\Traversable $namespaces, CacheBackendInterface $cache_backend, ModuleHandlerInterface $module_handler) {
-    parent::__construct('Plugin/ResponsiveVideoConverterApiPlugin', $namespaces, $module_handler, ResponsiveVideoConverterApiPluginInterface::class, ResponsiveVideoConverterApiPlugin::class);
-    $this->alterInfo('responsive_video_converter_api_plugin_info');
-    $this->setCacheBackend($cache_backend, 'responsive_video_converter_api_plugin_plugins');
+  public function __construct(
+    \Traversable $namespaces,
+    CacheBackendInterface $cache_backend,
+    ModuleHandlerInterface $module_handler,
+  ) {
+    parent::__construct(
+      "Plugin/ResponsiveVideoConverterApiPlugin",
+      $namespaces,
+      $module_handler,
+      ResponsiveVideoConverterApiPluginInterface::class,
+      ResponsiveVideoConverterApiPlugin::class,
+    );
+    $this->alterInfo("responsive_video_converter_api_plugin_info");
+    $this->setCacheBackend(
+      $cache_backend,
+      "responsive_video_converter_api_plugin_plugins",
+    );
   }
-
 }
